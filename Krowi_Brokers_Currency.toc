@@ -1,0 +1,25 @@
+## Interface: 110205
+## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
+## X-Prefix: KrowiBC
+## X-Acronym: KBC
+## Version: 1.0
+## Author: Krowi-Frostmane EU
+## SavedVariables: KrowiBCU_SavedData, KrowiBCU_SavedData
+## Notes: Tracks and displays gold/currencies with session stats, tooltips, multi-character totals, and visibility options
+## DefaultState: Enabled
+## LoadOnDemand: 0
+## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
+## X-Discord-Server-Name: Krowi's Addons
+## X-CurseForge: https://www.curseforge.com/wow/addons/titan-panel-currency-krowis
+## X-Curse-Project-ID: 1384482
+## X-Wago: https://addons.wago.io/addons/titan-panel-currency-krowis
+## X-Wago-ID: qGZReeGd
+
+Libs\Files.xml
+
+Localization\Files.xml
+
+Currency.lua
+Tooltip.lua
+Menu.lua
+Krowi_Brokers_Currency.lua
