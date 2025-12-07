@@ -19,3 +19,9 @@
 [LIST]
 [*]Titan Panel base options integration for proper plugin configuration
 [/LIST]
+
+[B]Added (3.2)[/B]
+[LIST]
+[*]WoW Token current market price display in money tooltip (can be toggled on/off)
+[*]Faction icons next to character names in tooltip for easy Alliance/Horde identification
+[/LIST]

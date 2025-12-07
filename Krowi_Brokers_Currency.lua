@@ -376,7 +376,8 @@ local function Create_Frames()
 		type = "data source",
 		tocname = "Krowi_Brokers_Currency",
 		text = GetFormattedMoney(),
-		icon = "inv_misc_coinbag_special",
+		icon = "interface\\icons\\inv_misc_curiouscoin",
+		category = "Information",
 	});
 
 	TradersTenderLDB.OnShow = OnShow;
