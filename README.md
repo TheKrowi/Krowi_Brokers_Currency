@@ -1,12 +1,12 @@
-# TitanPanel Currency – Krowi’s
+![Versions](https://img.shields.io/badge/Versions-11.2.7%20%7C%2011.2.5-blue?style=for-the-badge) [![CurseForge](https://img.shields.io/badge/curseforge-download-F16436?style=for-the-badge&logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/krowi-brokers-currency) [![Wago](https://img.shields.io/badge/Wago-Download-c1272d?style=for-the-badge)](https://addons.wago.io/addons/n6VPbOGd) [![Discord](https://img.shields.io/badge/discord-join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](mdBFQJYeQZ) [![PayPal](https://img.shields.io/badge/paypal-donate-002991.svg?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=9QEDV37APQ6YJ)
 
-This addon plugs right into Titan Panel to give you a clear view of your gold and currencies. It tracks across all your characters, shows session gains and losses, and lets you decide exactly how much detail you want on your bar or in tooltips.
+This addon plugs right into any data broker addon to give you a clear view of your gold and currencies. It tracks across all your characters, shows session gains and losses, and lets you decide exactly how much detail you want on your bar or in tooltips.
 
 ## Core Features
 
 ### Multiple Display Modes
 
-Pick what you want to see on your Titan Panel bar:
+Pick what you want to see on your bar:
 
 - **Character Gold** – Just the money on your current toon  
 - **Current Faction Total** – Totals for all your Alliance or Horde characters  

@@ -1,4 +1,4 @@
-## Interface: 110207
+## Interface: 110207, 110205
 ## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
 ## X-Prefix: KrowiBC
 ## X-Acronym: KBC
@@ -12,9 +12,9 @@
 ## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
 ## X-Discord-Server-Name: Krowi's Addons
 ## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-brokers-currency
-## X-Curse-Project-ID: 1384482
+## X-Curse-Project-ID: 1399736
 ## X-Wago: https://addons.wago.io/addons/krowi-brokers-currency
-## X-Wago-ID: qGZReeGd
+## X-Wago-ID: n6VPbOGd
 
 Libs\Files.xml
 
