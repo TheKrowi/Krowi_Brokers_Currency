@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 3.3 - 2025-12-08
+### Changed
+- Packaging
+
 ## 3.2 - 2025-11-28
 ### Added
 - WoW Token current market price display in money tooltip (can be toggled on/off)

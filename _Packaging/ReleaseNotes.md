@@ -17,3 +17,6 @@
 ### Added (3.2)
 - WoW Token current market price display in money tooltip (can be toggled on/off)
 - Faction icons next to character names in tooltip for easy Alliance/Horde identification
+
+### Changed (3.3)
+- Packaging

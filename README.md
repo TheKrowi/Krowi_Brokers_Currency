@@ -1,80 +1,75 @@
 ![Retail](https://img.shields.io/badge/Retail-11.2.7%20%7C%2011.2.5-008833?style=for-the-badge)<br>
-[![CurseForge](https://img.shields.io/badge/curseforge-download-F16436?style=for-the-badge&logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/krowi-brokers-currency) [![Wago](https://img.shields.io/badge/Wago-Download-c1272d?style=for-the-badge)](https://addons.wago.io/addons/n6VPbOGd)<br>
+[![CurseForge](https://img.shields.io/badge/curseforge-download-F16436?style=for-the-badge&logo=curseforge&logoColor=white)](https://www.curseforge.com/wow/addons/krowi-brokers-currency) [![Wago](https://img.shields.io/badge/Wago-Download-c1272d?style=for-the-badge)](https://addons.wago.io/addons/krowi-brokers-currency)<br>
 [![Discord](https://img.shields.io/badge/discord-join-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/mdBFQJYeQZ) [![PayPal](https://img.shields.io/badge/paypal-donate-002991.svg?style=for-the-badge&logo=paypal&logoColor=white)](https://www.paypal.com/donate/?hosted_button_id=9QEDV37APQ6YJ)
 
-This addon plugs right into any data broker addon to give you a clear view of your gold and currencies. It tracks across all your characters, shows session gains and losses, and lets you decide exactly how much detail you want on your bar or in tooltips.
+Krowi's Brokers [Currency] is a DataBroker addon that displays your gold and currencies in a clean, customizable way. Track gold across all characters, monitor session earnings, and organize currencies exactly how you want them.
 
-## Core Features
+### Display Modes
+Choose what appears on your data broker bar:
+- **Character Gold**  Current character's money only.
+- **Current Faction Total**  All Alliance or Horde characters combined.
+- **Realm Total**  Everything on your current realm.
+- **Account Total**  All characters across all realms plus Warband Bank.
+- **Warband Bank**  Shared account bank balance only.
 
-### Multiple Display Modes
+### Tooltip Views
+Switch between three tooltip styles with modifier keys:
+- **Money Tooltip**  All characters listed with their gold, sorted by wealth. Includes faction totals, session tracking, and WoW Token price (optional).
+- **Currency Tooltip**  All currencies organized by expansion or type.
+- **Combined Tooltip**  Both money and currencies in one view.
 
-Pick what you want to see on your bar:
-
-- **Character Gold** – Just the money on your current toon  
-- **Current Faction Total** – Totals for all your Alliance or Horde characters  
-- **Realm Total** – Everything on your current realm  
-- **Account Total** – All characters across every realm plus Warband Bank  
-- **Warband Bank** – Only the shared account‑wide bank balance  
-
-### Advanced Tooltips
-
-Switch between three tooltip styles with simple key presses:
-
-- **Money Tooltip** – Shows each character’s gold, sorted by wealth, plus faction totals and session info  
-- **Currency Tooltip** – Lists all currencies, grouped and sorted neatly  
-- **Combined Tooltip** – Both money and currencies together in one view  
-
-**Smart Controls:**
-
-- Hold `Shift` or `Ctrl` to flip between tooltip types  
-- Hints adjust depending on your default tooltip setting  
-- Input is throttled so it runs smoothly without lag  
+Hold **Shift** or **Ctrl** while hovering to cycle between tooltips. The hints update based on your default setting.
 
 ### Session Tracking
+Watch your gold changes in real-time:
+- Track for 1 to 48 hours with automatic extension while you play.
+- Shows earned and spent amounts in the tooltip.
+- Updates instantly with loot, trades, repairs, mail, and vendor purchases.
+- Survives reloads and disconnects.
+- Toggle off to clear and reset.
 
-Keep an eye on your gold flow while you play:
+### Character Overview
+All your characters at a glance:
+- Listed in the money tooltip, sorted by wealth.
+- Class colors for easy identification.
+- Green indicator marks your active character.
+- Cross-realm support with realm names shown when needed.
+- Separate faction totals for Alliance and Horde.
+- Warband Bank included in account totals.
 
-- **Flexible Duration** – Track anywhere from 1 to 48 hours  
-- **Data Persists** – Survives reloads and game restarts  
-- **Auto‑Extend** – Keeps going as long as you’re active  
-- **Live Updates** – Records every change (loot, trades, repairs, mail, etc.)  
-- **Quick Reset** – Toggle tracking off to clear the data instantly  
+### Money Options
+- **Labels**  None, text (g/s/c), or icon.
+- **Abbreviation**  None, 1k, or 1m format.
+- **Separators**  Space, period, or comma for thousands.
+- **Gold Only**  Hide silver and copper completely.
+- **Colored Coins**  Toggle gold/silver/copper colors.
+- **Character Limit**  Display 5 to 30 characters in tooltips.
+- **WoW Token**  Show current market price in money tooltip.
 
-### Character Management
+### Currency Options
+- **Group by Header**  Organize currencies by expansion or type.
+- **Hide Unused**  Only show currencies you have.
+- **Abbreviation**  None, 1k, or 1m format.
+- **Header Visibility**  Show or hide specific currency groups.
+- **Alphabetical Sorting**  Currencies sorted by name within each group.
 
-See the bigger picture across all your toons:
+### Configuration
+- **Default Tooltip**  Choose which tooltip shows by default.
+- **Realm Tracking**  Track all realms or current realm only.
+- **Session Duration**  Select from 1, 2, 4, 8, 12, 24, or 48 hours.
+- **Activity Check**  Configurable interval to extend active sessions.
+- Right-click the broker button to access all settings quickly.
 
-- **Multi‑Realm Support** – Works across every realm you play on  
-- **Faction Split** – Separate totals for Alliance and Horde  
-- **Class Colors** – Characters shown in their class color for easy spotting  
-- **Smart Sorting** – Richest characters float to the top automatically  
-- **Active Character Highlight** – Green marker shows which one you’re on  
-- **Warband Bank Included** – Shared account balance counted in totals  
+### Compatibility
+Works with any DataBroker display addon:
+- Bazooka
+- ChocolateBar
+- Titan Panel
+- Fortress
+- And more!
 
-## Customization Options
+More features can be requested via the issues system or discord.
 
-### Money Display
+Feel free to join discord and say hi: [https://discord.gg/mdBFQJYeQZ](https://discord.gg/mdBFQJYeQZ).
 
-- **Labels** – None, text (Gold/Silver/Copper), or icons  
-- **Abbreviation** – Full numbers, 1k format, or 1m format  
-- **Separators** – Space, period, or comma for thousands  
-- **Gold‑Only Mode** – Hide silver and copper if you prefer  
-- **Colored Display** – Toggle coin colors on or off  
-- **Character Limit** – Show between 5 and 30 characters in the tooltip  
-
-### Currency Display
-
-- **Header Grouping** – Organize by expansion or type  
-- **Hide Unused** – Only show currencies you actually own  
-- **Abbreviation** – Full numbers, 1k, or 1m format  
-- **Header Visibility** – Decide which currency groups appear  
-- **Alphabetical Sorting** – Keep lists clean and easy to scan  
-
-### Interface Options
-
-- **Default Tooltip** – Pick your go‑to tooltip type  
-- **Realm Tracking** – Include all realms or just the current one  
-- **Session Duration** – Choose from 1, 2, 4, 8, 12, 24, or 48 hours  
-- **Activity Monitoring** – Sessions extend automatically while you’re playing  
-
-**Pro Tip:** Try the **Combined** tooltip with Shift/Ctrl — it’s the fastest way to see both gold and currencies without digging through menus.
+Creating and maintaining addons takes a lot of time. If you can miss something, feel free to drop a donation!

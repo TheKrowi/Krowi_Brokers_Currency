@@ -7,3 +7,6 @@
 [submodule "Libs/Krowi_Menu"]
 	path = Libs/Krowi_Menu
 	url = https://github.com/TheKrowi/Krowi_Menu
+[submodule "Libs/Krowi_PopupDialog"]
+	path = Libs/Krowi_PopupDialog
+	url = https://github.com/TheKrowi/Krowi_PopupDialog
