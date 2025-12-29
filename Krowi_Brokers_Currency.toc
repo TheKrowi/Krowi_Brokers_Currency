@@ -1,8 +1,8 @@
-## Interface: 110207, 110205
+## Interface: 110207, 50503, 11508
 ## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
 ## X-Prefix: KrowiBC
 ## X-Acronym: KBC
-## Version: 3.3
+## Version: 4.0
 ## Author: Krowi-Frostmane EU
 ## SavedVariables: KrowiBCU_SavedData, KrowiBCU_SavedData
 ## Notes: Tracks and displays gold/currencies with session stats, tooltips, multi-character totals, and visibility options

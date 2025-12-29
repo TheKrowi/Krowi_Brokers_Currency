@@ -4,6 +4,8 @@ local currency = {};
 addon.Currency = currency;
 
 local C_CurrencyInfo = C_CurrencyInfo;
+C_CurrencyInfo.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize;
+C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or GetCurrencyListInfo;
 
 local headerStack = {};
 local headerOrder = {};
@@ -65,7 +67,7 @@ end
 function currency.GetAllAvailableHeaders()
 	local headers = currency.GetAllCurrenciesWithHeader();
 	local headerList = {};
-	
+
 	local function AddHeadersRecursive(headerEntry, parentPath)
 		local currentPath = parentPath and (parentPath .. " > " .. headerEntry.name) or headerEntry.name;
 		tinsert(headerList, {
@@ -73,16 +75,16 @@ function currency.GetAllAvailableHeaders()
 			path = currentPath,
 			depth = headerEntry.depth
 		});
-		
+
 		for _, childHeader in pairs(headerEntry.children) do
 			AddHeadersRecursive(childHeader, currentPath);
 		end
 	end
-	
+
 	for _, headerEntry in pairs(headers) do
 		AddHeadersRecursive(headerEntry);
 	end
-	
+
 	return headerList;
 end
 
