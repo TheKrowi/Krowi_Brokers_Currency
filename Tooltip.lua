@@ -131,23 +131,23 @@ local function DisplayMoneyContent()
 
 	local sessionProfit = addon.GetSessionProfit();
 	local sessionSpent = addon.GetSessionSpent();
-	
+
 	if sessionProfit > 0 or sessionSpent > 0 then
 		GameTooltip:AddLine(addon.L["Session:"]);
-		
+
 		if sessionProfit > 0 then
 			local profitFormatted = addon.FormatMoney(sessionProfit);
 			GameTooltip:AddDoubleLine(addon.L["Earned:"], profitFormatted, 0.5, 1, 0.5, 1, 1, 1);
 		end
-		
+
 		if sessionSpent > 0 then
 			local spentFormatted = addon.FormatMoney(sessionSpent);
 			GameTooltip:AddDoubleLine(addon.L["Spent:"], spentFormatted, 1, 0.5, 0.5, 1, 1, 1);
 		end
-		
+
 		GameTooltip_AddBlankLineToTooltip(GameTooltip);
 	end
-	
+
 	GameTooltip:AddLine(addon.L["Characters:"]);
 
 	local count = 0;
@@ -212,15 +212,17 @@ local function DisplayMoneyContent()
 		end
 	end
 
-	GameTooltip_AddBlankLineToTooltip(GameTooltip);
-	local warbandFormatted = addon.FormatMoney(warbandMoney);
-	GameTooltip:AddDoubleLine(addon.L["Warband Bank:"], warbandFormatted, 0.8, 0.6, 1, 1, 1, 1);
-	totalMoney = totalMoney + warbandMoney;
+	if addon.Util.IsMainline then
+		GameTooltip_AddBlankLineToTooltip(GameTooltip);
+		local warbandFormatted = addon.FormatMoney(warbandMoney);
+		GameTooltip:AddDoubleLine(addon.L["Warband Bank:"], warbandFormatted, 0.8, 0.6, 1, 1, 1, 1);
+		totalMoney = totalMoney + warbandMoney;
+	end
 
 	GameTooltip_AddBlankLineToTooltip(GameTooltip);
 	local totalFormatted = addon.FormatMoney(totalMoney);
 	GameTooltip:AddDoubleLine(addon.L["Total:"], totalFormatted);
-	
+
 	if KrowiBCU_SavedData.ShowWoWToken then
 		C_WowTokenPublic.UpdateMarketPrice();
 		local tokenPrice = C_WowTokenPublic.GetCurrentMarketPrice();

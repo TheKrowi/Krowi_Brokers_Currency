@@ -14,7 +14,7 @@ KrowiBCU_SavedData = KrowiBCU_SavedData or {
 	CurrencyHideUnused = true,
 	TrackAllRealms = true,
 	MaxCharacters = 20,
-	DefaultTooltip = addon.L["Currency"],
+	DefaultTooltip = addon.Util.IsMainline and addon.L["Currency"] or addon.L["Money"],
 	ButtonDisplay = addon.L["Character Gold"],
 	TrackSessionGold = true,
 	SessionDuration = 3600,
@@ -269,22 +269,24 @@ local function OnEvent(self, event, ...)
 	end
 end
 
-local function OnShow(self)
-    self:RegisterEvent("PLAYER_MONEY");
-	self:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
-	self:RegisterEvent("SEND_MAIL_COD_CHANGED");
-	self:RegisterEvent("PLAYER_TRADE_MONEY");
-	self:RegisterEvent("TRADE_MONEY_CHANGED");
-	addon.TradersTenderLDB.Update();
-end
+-- local function OnShow(self)
+-- 	print("LDB OnShow");
+--     self:RegisterEvent("PLAYER_MONEY");
+-- 	self:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
+-- 	self:RegisterEvent("SEND_MAIL_COD_CHANGED");
+-- 	self:RegisterEvent("PLAYER_TRADE_MONEY");
+-- 	self:RegisterEvent("TRADE_MONEY_CHANGED");
+-- 	addon.TradersTenderLDB.Update();
+-- end
 
-local function OnHide(self)
-    self:UnregisterEvent("PLAYER_MONEY");
-	self:UnregisterEvent("SEND_MAIL_MONEY_CHANGED");
-	self:UnregisterEvent("SEND_MAIL_COD_CHANGED");
-	self:UnregisterEvent("PLAYER_TRADE_MONEY");
-	self:UnregisterEvent("TRADE_MONEY_CHANGED");
-end
+-- local function OnHide(self)
+-- 	print("LDB OnHide");
+--     self:UnregisterEvent("PLAYER_MONEY");
+-- 	self:UnregisterEvent("SEND_MAIL_MONEY_CHANGED");
+-- 	self:UnregisterEvent("SEND_MAIL_COD_CHANGED");
+-- 	self:UnregisterEvent("PLAYER_TRADE_MONEY");
+-- 	self:UnregisterEvent("TRADE_MONEY_CHANGED");
+-- end
 
 local function OnClick(self, button)
 	if button == "LeftButton" then
@@ -296,17 +298,7 @@ local function OnClick(self, button)
 		return;
 	end
 
-	if addon.Util.IsTheWarWithin then
-		MenuUtil.CreateContextMenu(self, function(owner, menuObj)
-			menuObj:SetTag("KTPC_RIGHT_CLICK_MENU_OPTIONS");
-			addon.Menu.CreateMenu(self, menuObj);
-		end);
-	else
-		local rightClickMenu = LibStub("Krowi_Menu-1.0");
-		rightClickMenu:Clear();
-		addon.Menu.CreateMenu(self, rightClickMenu);
-		rightClickMenu:Open();
-	end
+	addon.Menu.ShowPopup();
 end
 
 local function ShowTooltip(self, forceType)
@@ -372,19 +364,21 @@ local function Create_Frames()
 		return;
 	end
 
+	addon.Menu.Init();
+
 	local TradersTenderLDB = LDB:NewDataObject("Krowi_Brokers_Currency", {
 		type = "data source",
 		tocname = "Krowi_Brokers_Currency",
 		text = GetFormattedMoney(),
-		icon = "interface\\icons\\inv_misc_curiouscoin",
+		icon = addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
 		category = "Information",
+		OnEnter = OnEnter,
+		OnLeave = OnLeave,
+		OnClick = OnClick,
 	});
 
-	TradersTenderLDB.OnShow = OnShow;
-	TradersTenderLDB.OnHide = OnHide;
-	TradersTenderLDB.OnClick = OnClick;
-	TradersTenderLDB.OnEnter = OnEnter;
-	TradersTenderLDB.OnLeave = OnLeave;
+	-- TradersTenderLDB.OnShow = OnShow;
+	-- TradersTenderLDB.OnHide = OnHide;
 	TradersTenderLDB.Update = function()
 		TradersTenderLDB.text = GetFormattedMoney();
 	end
@@ -392,6 +386,11 @@ local function Create_Frames()
 
 	local ldbFrame = CreateFrame("Frame");
 	ldbFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+    ldbFrame:RegisterEvent("PLAYER_MONEY");
+	ldbFrame:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
+	ldbFrame:RegisterEvent("SEND_MAIL_COD_CHANGED");
+	ldbFrame:RegisterEvent("PLAYER_TRADE_MONEY");
+	ldbFrame:RegisterEvent("TRADE_MONEY_CHANGED");
 	ldbFrame:SetScript("OnEvent", OnEvent);
 end
 

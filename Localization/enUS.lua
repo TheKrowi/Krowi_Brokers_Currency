@@ -2,7 +2,7 @@ local _, addon = ...;
 local L = addon.Localization.GetDefaultLocale();
 addon.L = L;
 
--- [[ https://legacy.curseforge.com/wow/addons/titan-panel-currency-krowis/localization ]] --
+-- [[ https://legacy.curseforge.com/wow/addons/krowi-brokers-currency/localization ]] --
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
 -- [[ Exported at 2025-11-28 08-39-36 ]] --
