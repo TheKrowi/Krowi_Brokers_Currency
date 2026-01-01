@@ -1,5 +1,7 @@
 ﻿local addonName, addon = ...;
 
+local currency = LibStub("Krowi_Currency-1.0");
+
 addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
 KrowiBCU_SavedData = KrowiBCU_SavedData or {
@@ -29,34 +31,6 @@ KrowiBCU_SavedData = KrowiBCU_SavedData or {
 	SessionLastUpdate = 0
 };
 
-function addon.AbbreviateValue(value, abbreviateK, abbreviateM)
-	if abbreviateK and value >= 1000 then
-		return math.floor(value / 1000), "k";
-	elseif abbreviateM and value >= 1000000 then
-		return math.floor(value / 1000000), "m";
-	end
-	return value, "";
-end
-
-function addon.GetSeparators()
-	if (KrowiBCU_SavedData.ThousandsSeparator == addon.L["Space"]) then
-		return " ", ".";
-	elseif (KrowiBCU_SavedData.ThousandsSeparator == addon.L["Period"]) then
-		return ".", ",";
-	elseif (KrowiBCU_SavedData.ThousandsSeparator == addon.L["Comma"]) then
-		return ",", ".";
-	end
-	return "", "";
-end
-
-function addon.GetHeaderSettingKey(headerName)
-	return "ShowHeader_" .. headerName:gsub(" ", "_");
-end
-
-local function BreakMoney(value)
-	return math.floor(value / 10000), math.floor((value % 10000) / 100), value % 100;
-end
-
 local function GetFontSize()
 	local fontSize = 12;
 	if TitanPanelGetVar then
@@ -65,66 +39,32 @@ local function GetFontSize()
 	return select(2, GameFontNormal:GetFont()) or fontSize;
 end
 
-function addon.NumToString(amount, thousands_separator, decimal_separator)
-	if type(amount) ~= "number" then
-		return "0";
-	end
+function addon.GetOptionsForLib()
+	local options = KrowiBCU_SavedData;
+	return {
+		MoneyLabel = options.MoneyLabel,
+		MoneyAbbreviate = options.MoneyAbbreviate,
+		ThousandsSeparator = options.ThousandsSeparator,
+		MoneyGoldOnly = options.MoneyGoldOnly,
+		MoneyColored = options.MoneyColored,
+		CurrencyAbbreviate = options.CurrencyAbbreviate,
+		GoldLabel = addon.L["Gold Label"],
+		SilverLabel = addon.L["Silver Label"],
+		CopperLabel = addon.L["Copper Label"],
+		TextureSize = GetFontSize()
+	};
+end
 
-	if amount > 99999999999999 then
-		return tostring(amount);
-	end
-
-	local sign, int, frac = tostring(amount):match('([-]?)(%d+)([.]?%d*)');
-	int = int:reverse():gsub("(%d%d%d)", "%1|");
-	int = int:reverse():gsub("^|", "");
-	int = int:gsub("%.", decimal_separator);
-	int = int:gsub("|", thousands_separator);
-
-	return sign .. int .. frac;
+function addon.GetHeaderSettingKey(headerName)
+	return "ShowHeader_" .. headerName:gsub(" ", "_");
 end
 
 function addon.FormatMoney(value)
-	local thousandsSeparator, decimalSeparator = addon.GetSeparators();
+	return currency:FormatMoney(value, addon.GetOptionsForLib());
+end
 
-	local gold, silver, copper, abbr = BreakMoney(value);
-
-	local moneyAbbreviateK = KrowiBCU_SavedData.MoneyAbbreviate == addon.L["1k"];
-	local moneyAbbreviateM = KrowiBCU_SavedData.MoneyAbbreviate == addon.L["1m"];
-	gold, abbr = addon.AbbreviateValue(gold, moneyAbbreviateK, moneyAbbreviateM);
-	gold = addon.NumToString(gold, thousandsSeparator, decimalSeparator);
-
-	local goldLabel, silverLabel, copperLabel = "", "", "";
-	if KrowiBCU_SavedData.MoneyLabel == addon.L["Text"] then
-		goldLabel = addon.L["Gold Label"];
-		silverLabel = addon.L["Silver Label"];
-		copperLabel = addon.L["Copper Label"];
-	elseif KrowiBCU_SavedData.MoneyLabel == addon.L["Icon"] then
-		local font_size = GetFontSize();
-		local icon_pre = "|TInterface\\MoneyFrame\\";
-		local icon_post = ":" .. font_size .. ":" .. font_size .. ":2:0|t";
-		goldLabel = icon_pre .. "UI-GoldIcon" .. icon_post;
-		silverLabel = icon_pre .. "UI-SilverIcon" .. icon_post;
-		copperLabel = icon_pre .. "UI-CopperIcon" .. icon_post;
-	end
-
-	local colors = KrowiBCU_SavedData.MoneyColored and {
-		coin_gold = "ffd100",
-		coin_silver = "e6e6e6",
-		coin_copper = "c8602c",
-	} or {
-        coin_gold = "ffffff",
-        coin_silver = "ffffff",
-        coin_copper = "ffffff",
-    };
-
-	local outstr = "|cff" .. colors.coin_gold .. gold .. abbr .. goldLabel .. "|r";
-
-	if not KrowiBCU_SavedData.MoneyGoldOnly then
-		outstr = outstr .. " " .. "|cff" .. colors.coin_silver .. silver .. silverLabel .. "|r";
-		outstr = outstr .. " " .. "|cff" .. colors.coin_copper .. copper .. copperLabel .. "|r";
-	end
-
-	return outstr;
+function addon.FormatCurrency(value)
+	return currency:FormatCurrency(value, addon.GetOptionsForLib());
 end
 
 local function GetFormattedMoney()

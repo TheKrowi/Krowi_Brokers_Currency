@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.0 - 2026-01-05
+### Change
+- Refactored currency and money formatting into new Krowi_Currency-1.0 library for reuse across addons
+- Extracted formatting functions: FormatMoney(), FormatCurrency(), and supporting utilities into standalone library
+
 ## 4.0 - 2025-12-29
 ### Change
 - Menu generation and handling (dev note: for classic user this should be an invisible change; for mainline users this should reflect in modern looking drop down menus)

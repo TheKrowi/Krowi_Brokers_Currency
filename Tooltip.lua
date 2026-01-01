@@ -26,7 +26,7 @@ local function ShouldShowHeader(headerName)
 	return shouldShow;
 end
 
-local function DisplayHeaderRecursive(headerEntry, depth, abbreviateK, abbreviateM, thousandsSeparator, decimalSeparator)
+local function DisplayHeaderRecursive(headerEntry, depth)
 	if not HeaderHasCurrencies(headerEntry) then
 		return;
 	end
@@ -46,24 +46,19 @@ local function DisplayHeaderRecursive(headerEntry, depth, abbreviateK, abbreviat
 		table.sort(currencies, function(a, b) return a.name < b.name end);
 
 		for _, currency in ipairs(currencies) do
-			local quantity, abbr = addon.AbbreviateValue(currency.quantity, abbreviateK, abbreviateM);
-			quantity = addon.NumToString(quantity, thousandsSeparator, decimalSeparator);
-			GameTooltip:AddDoubleLine(indent .. "  " .. currency.name, quantity .. abbr .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
+			GameTooltip:AddDoubleLine(indent .. "  " .. currency.name, addon.FormatCurrency(currency.quantity) .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
 		end
 	end
 
 	for _, childHeader in pairs(headerEntry.children) do
 		if HeaderHasCurrencies(childHeader) then
-			DisplayHeaderRecursive(childHeader, depth + 1, abbreviateK, abbreviateM, thousandsSeparator, decimalSeparator);
+			DisplayHeaderRecursive(childHeader, depth + 1);
 		end
 	end
 end
 
 function tooltip.GetAllCurrenciesWithHeaderSorted()
 	local headers, orderedHeaderNames = addon.Currency.GetAllCurrenciesWithHeader();
-    local abbreviateK = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1k"];
-    local abbreviateM = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1m"];
-	local thousandsSeparator, decimalSeparator = addon.GetSeparators();
 
 	local hasDisplayedAnyHeader = false;
 	for _, headerName in ipairs(orderedHeaderNames) do
@@ -73,7 +68,7 @@ function tooltip.GetAllCurrenciesWithHeaderSorted()
 				if hasDisplayedAnyHeader then
 					GameTooltip_AddBlankLineToTooltip(GameTooltip);
 				end
-				DisplayHeaderRecursive(headerEntry, 0, abbreviateK, abbreviateM, thousandsSeparator, decimalSeparator);
+				DisplayHeaderRecursive(headerEntry, 0);
 				hasDisplayedAnyHeader = true;
 			end
 		end
@@ -82,16 +77,11 @@ end
 
 function tooltip.GetAllCurrenciesSorted()
 	local currencies = addon.Currency.GetAllCurrencies();
-    local abbreviateK = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1k"];
-    local abbreviateM = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1m"];
-	local thousandsSeparator, decimalSeparator = addon.GetSeparators();
 
 	table.sort(currencies, function(a, b) return a.name < b.name end);
 
 	for _, currency in next, currencies do
-		local quantity, abbr = addon.AbbreviateValue(currency.quantity, abbreviateK, abbreviateM);
-		quantity = addon.NumToString(quantity, thousandsSeparator, decimalSeparator);
-		GameTooltip:AddDoubleLine(currency.name, quantity .. abbr .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
+		GameTooltip:AddDoubleLine(currency.name, addon.FormatCurrency(currency.quantity) .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
 	end
 end
 
