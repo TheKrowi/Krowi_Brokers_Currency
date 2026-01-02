@@ -90,28 +90,8 @@ function menu.CreateMenu(self, menuObj)
 	menuBuilder:AddChildMenu(menuObj, defaultTooltip);
 
 	menuBuilder:CreateDivider(menuObj);
-	menuBuilder:CreateTitle(menuObj, addon.L["Money Options"]);
-
-	local moneyLabel = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Money Label"]);
-	menuBuilder:CreateRadio(moneyLabel, addon.L["None"], KrowiBCU_SavedData, {"MoneyLabel"});
-	menuBuilder:CreateRadio(moneyLabel, addon.L["Text"], KrowiBCU_SavedData, {"MoneyLabel"});
-	menuBuilder:CreateRadio(moneyLabel, addon.L["Icon"], KrowiBCU_SavedData, {"MoneyLabel"});
-	menuBuilder:AddChildMenu(menuObj, moneyLabel);
-
-	local moneyAbbreviate = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Money Abbreviate"]);
-	menuBuilder:CreateRadio(moneyAbbreviate, addon.L["None"], KrowiBCU_SavedData, {"MoneyAbbreviate"});
-	menuBuilder:CreateRadio(moneyAbbreviate, addon.L["1k"], KrowiBCU_SavedData, {"MoneyAbbreviate"});
-	menuBuilder:CreateRadio(moneyAbbreviate, addon.L["1m"], KrowiBCU_SavedData, {"MoneyAbbreviate"});
-	menuBuilder:AddChildMenu(menuObj, moneyAbbreviate);
-
-	local thousandsSeparator = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Thousands Separator"]);
-	menuBuilder:CreateRadio(thousandsSeparator, addon.L["Space"], KrowiBCU_SavedData, {"ThousandsSeparator"});
-	menuBuilder:CreateRadio(thousandsSeparator, addon.L["Period"], KrowiBCU_SavedData, {"ThousandsSeparator"});
-	menuBuilder:CreateRadio(thousandsSeparator, addon.L["Comma"], KrowiBCU_SavedData, {"ThousandsSeparator"});
-	menuBuilder:AddChildMenu(menuObj, thousandsSeparator);
-
-	menuBuilder:CreateCheckbox(menuObj, addon.L["Money Gold Only"], KrowiBCU_SavedData, {"MoneyGoldOnly"});
-	menuBuilder:CreateCheckbox(menuObj, addon.L["Money Colored"], KrowiBCU_SavedData, {"MoneyColored"});
+	local lib = LibStub("Krowi_Currency-1.0");
+	lib:CreateMoneyOptionsMenu(menuObj, menuBuilder, KrowiBCU_SavedData);
 
 	local maxCharsMenu = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Max Characters"]);
 	menuBuilder:CreateRadio(maxCharsMenu, "5", KrowiBCU_SavedData, {"MaxCharacters"}, 5);
@@ -158,13 +138,7 @@ function menu.CreateMenu(self, menuObj)
 	menuBuilder:CreateCheckbox(menuObj, addon.L["Show WoW Token"], KrowiBCU_SavedData, {"ShowWoWToken"});
 
 	menuBuilder:CreateDivider(menuObj);
-	menuBuilder:CreateTitle(menuObj, addon.L["Currency Options"]);
-
-	local currencyAbbreviate = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Currency Abbreviate"]);
-	menuBuilder:CreateRadio(currencyAbbreviate, addon.L["None"], KrowiBCU_SavedData, {"CurrencyAbbreviate"});
-	menuBuilder:CreateRadio(currencyAbbreviate, addon.L["1k"], KrowiBCU_SavedData, {"CurrencyAbbreviate"});
-	menuBuilder:CreateRadio(currencyAbbreviate, addon.L["1m"], KrowiBCU_SavedData, {"CurrencyAbbreviate"});
-	menuBuilder:AddChildMenu(menuObj, currencyAbbreviate);
+	lib:CreateCurrencyOptionsMenu(menuObj, menuBuilder, KrowiBCU_SavedData);
 
 	menuBuilder:CreateCheckbox(menuObj, addon.L["Currency Group By Header"], KrowiBCU_SavedData, {"CurrencyGroupByHeader"});
 	menuBuilder:CreateCheckbox(menuObj, addon.L["Currency Hide Unused"], KrowiBCU_SavedData, {"CurrencyHideUnused"});

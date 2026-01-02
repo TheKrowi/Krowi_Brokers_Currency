@@ -6,10 +6,10 @@ addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
 KrowiBCU_SavedData = KrowiBCU_SavedData or {
 	HeaderSettings = {},
-	MoneyLabel = addon.L["Icon"],
-	MoneyAbbreviate = addon.L["None"],
-	ThousandsSeparator = addon.L["Space"],
-	CurrencyAbbreviate = addon.L["None"],
+	MoneyLabel = "Icon",
+	MoneyAbbreviate = "None",
+	ThousandsSeparator = "Space",
+	CurrencyAbbreviate = "None",
 	MoneyGoldOnly = false,
 	MoneyColored = true,
 	CurrencyGroupByHeader = true,

@@ -2,12 +2,12 @@
 All notable changes to this project will be documented in this file.
 
 ## 5.0 - 2026-01-05
-### Change
+### Changed
 - Refactored currency and money formatting into new Krowi_Currency-1.0 library for reuse across addons
 - Extracted formatting functions: FormatMoney(), FormatCurrency(), and supporting utilities into standalone library
 
 ## 4.0 - 2025-12-29
-### Change
+### Changed
 - Menu generation and handling (dev note: for classic user this should be an invisible change; for mainline users this should reflect in modern looking drop down menus)
 
 ### Mists Classic
@@ -44,7 +44,7 @@ All notable changes to this project will be documented in this file.
 - Menu reorganized into logical sections: Button Display, Tooltip Options, Money Options, Currency Options
 
 ## 2.0 - 2025-11-24
-### Change
+### Changed
 - Total rewrite with improved functionality
 
 ## 1.0 - 2025-11-14
