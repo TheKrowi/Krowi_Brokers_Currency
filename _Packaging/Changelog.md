@@ -1,7 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
-## 5.0 - 2026-01-05
+## 5.1 - 2026-01-02
+### Fixed
+- Multi addon library usage errors
+
+## 5.0 - 2026-01-02
 ### Changed
 - Refactored currency and money formatting into new Krowi_Currency-1.0 library for reuse across addons
 - Extracted formatting functions: FormatMoney(), FormatCurrency(), and supporting utilities into standalone library
