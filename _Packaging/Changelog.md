@@ -1,6 +1,10 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 5.2 - 2026-01-02
+### Mists Classic
+- Fixed issue where currencies were not properly displayed
+
 ## 5.1 - 2026-01-02
 ### Fixed
 - Multi addon library usage errors

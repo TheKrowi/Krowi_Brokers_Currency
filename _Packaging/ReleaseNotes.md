@@ -4,3 +4,6 @@
 
 ### Fixed (5.1)
 - Multi addon library usage errors
+
+### Mists Classic (5.2)
+- Fixed issue where currencies were not properly displayed

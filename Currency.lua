@@ -5,7 +5,23 @@ addon.Currency = currency;
 
 local C_CurrencyInfo = C_CurrencyInfo;
 C_CurrencyInfo.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize;
-C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or GetCurrencyListInfo;
+C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or function(index)
+	local name, isHeader, isExpanded, isUnused, isWatched, count, icon, maximum, hasWeeklyLimit, currentWeeklyAmount, _, itemID = GetCurrencyListInfo(index)
+	return {
+		name = name,
+		isHeader = isHeader,
+		isHeaderExpanded = isExpanded,
+		isTypeUnused = isUnused,
+		isShowInBackpack = isWatched,
+		quantity = count,
+		iconFileID = icon,
+		maxQuantity = maximum,
+		canEarnPerWeek = hasWeeklyLimit,
+		quantityEarnedThisWeek = currentWeeklyAmount,
+		currencyID = itemID,
+		currencyListDepth = isHeader and 0 or 1,
+	};
+end;
 
 local headerStack = {};
 local headerOrder = {};
