@@ -4,7 +4,7 @@ local currency = LibStub("Krowi_Currency-1.0");
 
 addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
-KrowiBCU_SavedData = KrowiBCU_SavedData or {
+KrowiBCU_Options = KrowiBCU_Options or {
 	HeaderSettings = {},
 	MoneyLabel = "Icon",
 	MoneyAbbreviate = "None",
@@ -40,7 +40,7 @@ local function GetFontSize()
 end
 
 function addon.GetOptionsForLib()
-	local options = KrowiBCU_SavedData;
+	local options = KrowiBCU_Options;
 	return {
 		MoneyLabel = options.MoneyLabel,
 		MoneyAbbreviate = options.MoneyAbbreviate,
@@ -67,8 +67,33 @@ function addon.FormatCurrency(value)
 	return currency:FormatCurrency(value, addon.GetOptionsForLib());
 end
 
-local function GetFormattedMoney()
-	local displayMode = KrowiBCU_SavedData.ButtonDisplay;
+function addon.GetSessionProfit()
+	return KrowiBCU_SavedData.SessionProfit or 0;
+end
+
+function addon.GetSessionSpent()
+	return KrowiBCU_SavedData.SessionSpent or 0;
+end
+
+function addon.ResetSessionTracking()
+	KrowiBCU_SavedData.SessionProfit = 0;
+	KrowiBCU_SavedData.SessionSpent = 0;
+	KrowiBCU_SavedData.SessionLastUpdate = time();
+end
+
+function addon.GetWarbandMoney()
+	local warbandMoney = 0;
+	if C_Bank and C_Bank.FetchDepositedMoney and Enum and Enum.BankType then
+		local money = C_Bank.FetchDepositedMoney(Enum.BankType.Account);
+		if type(money) == "number" then
+			warbandMoney = money;
+		end
+	end
+	return warbandMoney;
+end
+
+function addon.GetDisplayText()
+	local displayMode = KrowiBCU_Options.ButtonDisplay;
 	local currentRealmName = GetRealmName() or "Unknown";
 	local currentFaction = UnitFactionGroup("player") or "Neutral";
 	local characterData = KrowiBCU_SavedData.CharacterData or {};
@@ -106,10 +131,75 @@ local function GetFormattedMoney()
 	end
 end
 
+local function OnClick(self, button)
+	if button == "LeftButton" then
+		ToggleAllBags();
+		return;
+	end
+
+	if button ~= "RightButton" then
+		return;
+	end
+
+	addon.Menu.ShowPopup();
+end
+
+local function OnEnter(self)
+	addon.Tooltip.Show(self);
+
+	local lastShiftState = IsShiftKeyDown();
+	local lastCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
+	local throttle = 0;
+	self:SetScript("OnUpdate", function(frame, elapsed)
+		throttle = throttle + elapsed;
+		if throttle < 0.1 then return; end
+		throttle = 0;
+
+		local currentShiftState = IsShiftKeyDown();
+		local currentCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
+		if currentShiftState ~= lastShiftState or currentCtrlState ~= lastCtrlState then
+			lastShiftState = currentShiftState;
+			lastCtrlState = currentCtrlState;
+			addon.Tooltip.Show(frame);
+		end
+	end);
+end
+
+local function OnLeave(self)
+	self:SetScript("OnUpdate", nil);
+	GameTooltip:Hide();
+end
+
+function addon.Init()
+	addon.Menu.Init();
+	addon.Tooltip.Init();
+
+	local dataObject = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
+		type = "data source",
+		tocname = addonName,
+		icon = addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
+		text = addon.Metadata.Title .. " " .. addon.Metadata.Version,
+		category = "Information",
+		OnEnter = OnEnter,
+		OnLeave = OnLeave,
+		OnClick = OnClick,
+	});
+
+	function dataObject:Update()
+		self.text = addon.GetDisplayText();
+	end
+
+	dataObject:Update();
+
+	addon.TradersTenderLDB = dataObject;
+end
+
+addon.Init()
+
 local function CheckSessionExpiration()
 	local currentTime = time();
 	local lastUpdate = KrowiBCU_SavedData.SessionLastUpdate or 0;
-	local duration = KrowiBCU_SavedData.SessionDuration or 3600;
+	local duration = KrowiBCU_Options.SessionDuration or 3600;
 
 	if currentTime - lastUpdate > duration then
 		KrowiBCU_SavedData.SessionProfit = 0;
@@ -122,31 +212,6 @@ end
 
 local function UpdateSessionActivity()
 	KrowiBCU_SavedData.SessionLastUpdate = time();
-end
-
-function addon.GetSessionProfit()
-	return KrowiBCU_SavedData.SessionProfit or 0;
-end
-
-function addon.GetSessionSpent()
-	return KrowiBCU_SavedData.SessionSpent or 0;
-end
-
-function addon.ResetSessionTracking()
-	KrowiBCU_SavedData.SessionProfit = 0;
-	KrowiBCU_SavedData.SessionSpent = 0;
-	KrowiBCU_SavedData.SessionLastUpdate = time();
-end
-
-function addon.GetWarbandMoney()
-	local warbandMoney = 0;
-	if C_Bank and C_Bank.FetchDepositedMoney and Enum and Enum.BankType then
-		local money = C_Bank.FetchDepositedMoney(Enum.BankType.Account);
-		if type(money) == "number" then
-			warbandMoney = money;
-		end
-	end
-	return warbandMoney;
 end
 
 local function UpdateCharacterData()
@@ -163,7 +228,7 @@ local function UpdateCharacterData()
 	local oldMoney = (oldData and oldData.money) or currentMoney;
 
 	local change = currentMoney - oldMoney;
-	if change ~= 0 and KrowiBCU_SavedData.TrackSessionGold then
+	if change ~= 0 and KrowiBCU_Options.TrackSessionGold then
 		if change > 0 then
 			KrowiBCU_SavedData.SessionProfit = (KrowiBCU_SavedData.SessionProfit or 0) + change;
 		elseif change < 0 then
@@ -186,18 +251,18 @@ end
 local sessionDataLoaded = false;
 local activityCheckTimer = nil;
 local function OnEvent(self, event, ...)
-	if event == "PLAYER_MONEY" or event == "SEND_MAIL_MONEY_CHANGED" or 
-	   event == "SEND_MAIL_COD_CHANGED" or event == "PLAYER_TRADE_MONEY" or 
+	if event == "PLAYER_MONEY" or event == "SEND_MAIL_MONEY_CHANGED" or
+	   event == "SEND_MAIL_COD_CHANGED" or event == "PLAYER_TRADE_MONEY" or
 	   event == "TRADE_MONEY_CHANGED" then
 		UpdateCharacterData();
-		addon.TradersTenderLDB.Update();
+		addon.TradersTenderLDB:Update();
 	elseif event == "PLAYER_ENTERING_WORLD" then
 		if not sessionDataLoaded then
 			CheckSessionExpiration();
 			sessionDataLoaded = true;
 
 			if not activityCheckTimer then
-				local interval = KrowiBCU_SavedData.SessionActivityCheckInterval or 600;
+				local interval = KrowiBCU_Options.SessionActivityCheckInterval or 600;
 				activityCheckTimer = C_Timer.NewTicker(interval, function()
 					UpdateSessionActivity();
 				end);
@@ -205,133 +270,15 @@ local function OnEvent(self, event, ...)
 		end
 
 		UpdateCharacterData();
-		addon.TradersTenderLDB.Update();
+		addon.TradersTenderLDB:Update();
 	end
 end
 
--- local function OnShow(self)
--- 	print("LDB OnShow");
---     self:RegisterEvent("PLAYER_MONEY");
--- 	self:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
--- 	self:RegisterEvent("SEND_MAIL_COD_CHANGED");
--- 	self:RegisterEvent("PLAYER_TRADE_MONEY");
--- 	self:RegisterEvent("TRADE_MONEY_CHANGED");
--- 	addon.TradersTenderLDB.Update();
--- end
-
--- local function OnHide(self)
--- 	print("LDB OnHide");
---     self:UnregisterEvent("PLAYER_MONEY");
--- 	self:UnregisterEvent("SEND_MAIL_MONEY_CHANGED");
--- 	self:UnregisterEvent("SEND_MAIL_COD_CHANGED");
--- 	self:UnregisterEvent("PLAYER_TRADE_MONEY");
--- 	self:UnregisterEvent("TRADE_MONEY_CHANGED");
--- end
-
-local function OnClick(self, button)
-	if button == "LeftButton" then
-		ToggleAllBags();
-		return;
-	end
-
-	if button ~= "RightButton" then
-		return;
-	end
-
-	addon.Menu.ShowPopup();
-end
-
-local function ShowTooltip(self, forceType)
-	local tooltipType = forceType;
-	if not tooltipType then
-		local defaultTooltip = KrowiBCU_SavedData.DefaultTooltip;
-		local shiftPressed = IsShiftKeyDown();
-		local ctrlPressed = IsLeftControlKeyDown() or IsRightControlKeyDown();
-
-		if defaultTooltip == addon.L["Combined"] then
-			if ctrlPressed then
-				tooltipType = addon.L["Currency"];
-			elseif shiftPressed then
-				tooltipType = addon.L["Money"];
-			else
-				tooltipType = addon.L["Combined"];
-			end
-		elseif defaultTooltip == addon.L["Money"] then
-			tooltipType = shiftPressed and addon.L["Currency"] or addon.L["Money"];
-		else
-			tooltipType = shiftPressed and addon.L["Money"] or addon.L["Currency"];
-		end
-	end
-
-	if tooltipType == addon.L["Money"] then
-		addon.Tooltip.GetDetailedMoneyTooltip(self);
-	elseif tooltipType == addon.L["Combined"] then
-		addon.Tooltip.GetCombinedTooltip(self);
-	else
-		addon.Tooltip.GetAllCurrenciesTooltip(self);
-	end
-end
-
-local function OnEnter(self)
-	ShowTooltip(self);
-
-	local lastShiftState = IsShiftKeyDown();
-	local lastCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
-	local throttle = 0;
-	self:SetScript("OnUpdate", function(frame, elapsed)
-		throttle = throttle + elapsed;
-		if throttle < 0.1 then return; end
-		throttle = 0;
-
-		local currentShiftState = IsShiftKeyDown();
-		local currentCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
-		if currentShiftState ~= lastShiftState or currentCtrlState ~= lastCtrlState then
-			lastShiftState = currentShiftState;
-			lastCtrlState = currentCtrlState;
-			ShowTooltip(frame);
-		end
-	end);
-end
-
-local function OnLeave(self)
-	GameTooltip:Hide();
-	self:SetScript("OnUpdate", nil);
-end
-
-local function Create_Frames()
-	local LDB = LibStub("LibDataBroker-1.1", true);
-	if not LDB then
-		return;
-	end
-
-	addon.Menu.Init();
-
-	local TradersTenderLDB = LDB:NewDataObject("Krowi_Brokers_Currency", {
-		type = "data source",
-		tocname = "Krowi_Brokers_Currency",
-		text = GetFormattedMoney(),
-		icon = addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
-		category = "Information",
-		OnEnter = OnEnter,
-		OnLeave = OnLeave,
-		OnClick = OnClick,
-	});
-
-	-- TradersTenderLDB.OnShow = OnShow;
-	-- TradersTenderLDB.OnHide = OnHide;
-	TradersTenderLDB.Update = function()
-		TradersTenderLDB.text = GetFormattedMoney();
-	end
-	addon.TradersTenderLDB = TradersTenderLDB;
-
-	local ldbFrame = CreateFrame("Frame");
-	ldbFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    ldbFrame:RegisterEvent("PLAYER_MONEY");
-	ldbFrame:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
-	ldbFrame:RegisterEvent("SEND_MAIL_COD_CHANGED");
-	ldbFrame:RegisterEvent("PLAYER_TRADE_MONEY");
-	ldbFrame:RegisterEvent("TRADE_MONEY_CHANGED");
-	ldbFrame:SetScript("OnEvent", OnEvent);
-end
-
-Create_Frames();
+local eventFrame = Krowi_Brokers_EventFrame or CreateFrame("Frame", "Krowi_Brokers_EventFrame");
+eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
+eventFrame:RegisterEvent("PLAYER_MONEY");
+eventFrame:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
+eventFrame:RegisterEvent("SEND_MAIL_COD_CHANGED");
+eventFrame:RegisterEvent("PLAYER_TRADE_MONEY");
+eventFrame:RegisterEvent("TRADE_MONEY_CHANGED");
+eventFrame:SetScript("OnEvent", OnEvent);

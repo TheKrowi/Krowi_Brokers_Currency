@@ -1,14 +1,25 @@
 ## Interface: 110207, 50503, 11508
 ## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
-## X-Prefix: KrowiBC
-## X-Acronym: KBC
-## Version: 5.2
+## X-Prefix: KrowiBCU
+## X-Acronym: KBCU
+## Version: 6.0
 ## Author: Krowi-Frostmane EU
-## SavedVariables: KrowiBCU_SavedData, KrowiBCU_SavedData
+## SavedVariables: KrowiBCU_Options, KrowiBCU_SavedData
 ## Notes: Tracks and displays gold/currencies with session stats, tooltips, multi-character totals, and visibility options
 ## IconTexture: interface/icons/inv_misc_curiouscoin
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
+## Category: Data Broker
+## Category-deDE: Datenbroker
+## Category-esES: Intermediario de Datos
+## Category-esMX: Intermediario de Datos
+## Category-frFR: Courtier de Données
+## Category-itIT: Data Broker
+## Category-koKR:
+## Category-ptBR: Corretor de Dados
+## Category-ruRU: Посредник данных
+## Category-zhCN: 数据管理
+## Category-zhTW: 資料管理
 ## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
 ## X-Discord-Server-Name: Krowi's Addons
 ## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-brokers-currency

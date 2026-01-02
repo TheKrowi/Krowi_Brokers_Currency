@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 6.0 - 2026-01-03
+### Changed
+- Split saved variables into KrowiBCU_Options (settings) and KrowiBCU_SavedData (character data) for better organization (dev note: this will unfortunately reset all settings to defaults)
+- Major code refactoring: Reorganized initialization order and improved code structure throughout main file
+- Fixed prefix/acronym in TOC file from KrowiBC/KBC to KrowiBCU/KBCU for consistency
+- Added localized category tags in TOC file for better addon manager organization
+
 ## 5.2 - 2026-01-02
 ### Mists Classic
 - Fixed issue where currencies were not properly displayed

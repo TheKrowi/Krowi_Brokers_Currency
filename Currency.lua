@@ -60,7 +60,7 @@ local function GetNextCurrencyWithHeader(currencies, startIndex)
 				C_CurrencyInfo.ExpandCurrencyList(i, true);
 				return false, i + 1;
 			end
-		elseif #headerStack > 0 and not (KrowiBCU_SavedData.CurrencyHideUnused and info.isTypeUnused) then
+		elseif #headerStack > 0 and not (KrowiBCU_Options.CurrencyHideUnused and info.isTypeUnused) then
 			local currentHeader = headerStack[#headerStack];
 			if currentHeader then
 				tinsert(currentHeader.currencies, info);
@@ -107,7 +107,7 @@ end
 function currency.UpdateChildHeaders(headerEntry, newValue)
 	for _, childHeader in pairs(headerEntry.children) do
 		local childSettingKey = addon.GetHeaderSettingKey(childHeader.name);
-		addon.Util.WriteNestedKeys(KrowiBCU_SavedData, {"HeaderSettings", childSettingKey}, newValue);
+		addon.Util.WriteNestedKeys(KrowiBCU_Options, {"HeaderSettings", childSettingKey}, newValue);
 		currency.UpdateChildHeaders(childHeader, newValue);
 	end
 end
@@ -121,7 +121,7 @@ local function GetNextCurrency(currencies, startIndex)
 				C_CurrencyInfo.ExpandCurrencyList(i, true);
 				return false, i + 1;
 			end
-		elseif not (KrowiBCU_SavedData.CurrencyHideUnused and info.isTypeUnused) then
+		elseif not (KrowiBCU_Options.CurrencyHideUnused and info.isTypeUnused) then
 			tinsert(currencies, info);
 		end
 	end
