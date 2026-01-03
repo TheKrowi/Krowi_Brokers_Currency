@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 7.0 - 2026-01-03
+### Changed
+- Extracted broker initialization logic into new Krowi_Brokers-1.0 library for reuse across addons
+- Refactored event registration and initialization flow to use centralized broker library
+- Improved code organization by consolidating broker setup into standardized library calls
+
 ## 6.0 - 2026-01-03
 ### Changed
 - Split saved variables into KrowiBCU_Options (settings) and KrowiBCU_SavedData (character data) for better organization (dev note: this will unfortunately reset all settings to defaults)

@@ -170,32 +170,6 @@ local function OnLeave(self)
 	GameTooltip:Hide();
 end
 
-function addon.Init()
-	addon.Menu.Init();
-	addon.Tooltip.Init();
-
-	local dataObject = LibStub("LibDataBroker-1.1"):NewDataObject(addonName, {
-		type = "data source",
-		tocname = addonName,
-		icon = addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
-		text = addon.Metadata.Title .. " " .. addon.Metadata.Version,
-		category = "Information",
-		OnEnter = OnEnter,
-		OnLeave = OnLeave,
-		OnClick = OnClick,
-	});
-
-	function dataObject:Update()
-		self.text = addon.GetDisplayText();
-	end
-
-	dataObject:Update();
-
-	addon.TradersTenderLDB = dataObject;
-end
-
-addon.Init()
-
 local function CheckSessionExpiration()
 	local currentTime = time();
 	local lastUpdate = KrowiBCU_SavedData.SessionLastUpdate or 0;
@@ -255,30 +229,47 @@ local function OnEvent(self, event, ...)
 	   event == "SEND_MAIL_COD_CHANGED" or event == "PLAYER_TRADE_MONEY" or
 	   event == "TRADE_MONEY_CHANGED" then
 		UpdateCharacterData();
-		addon.TradersTenderLDB:Update();
+		addon.LDB:Update();
 	elseif event == "PLAYER_ENTERING_WORLD" then
-		if not sessionDataLoaded then
-			CheckSessionExpiration();
-			sessionDataLoaded = true;
+		UpdateCharacterData();
+		addon.LDB:Update();
 
-			if not activityCheckTimer then
-				local interval = KrowiBCU_Options.SessionActivityCheckInterval or 600;
-				activityCheckTimer = C_Timer.NewTicker(interval, function()
-					UpdateSessionActivity();
-				end);
-			end
+		if sessionDataLoaded then
+			return
 		end
 
-		UpdateCharacterData();
-		addon.TradersTenderLDB:Update();
+		CheckSessionExpiration();
+		sessionDataLoaded = true;
+
+		if activityCheckTimer then
+			return
+		end
+
+		local interval = KrowiBCU_Options.SessionActivityCheckInterval or 600;
+		activityCheckTimer = C_Timer.NewTicker(interval, function()
+			UpdateSessionActivity();
+		end);
 	end
 end
 
-local eventFrame = Krowi_Brokers_EventFrame or CreateFrame("Frame", "Krowi_Brokers_EventFrame");
-eventFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-eventFrame:RegisterEvent("PLAYER_MONEY");
-eventFrame:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
-eventFrame:RegisterEvent("SEND_MAIL_COD_CHANGED");
-eventFrame:RegisterEvent("PLAYER_TRADE_MONEY");
-eventFrame:RegisterEvent("TRADE_MONEY_CHANGED");
-eventFrame:SetScript("OnEvent", OnEvent);
+local brokers = LibStub("Krowi_Brokers-1.0");
+brokers:InitBroker(
+	addonName,
+	addon,
+	addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
+	OnEnter,
+	OnLeave,
+	OnClick,
+	OnEvent,
+	addon.GetDisplayText,
+	addon.Menu,
+	addon.Tooltip
+)
+brokers:RegisterEvents(
+	"PLAYER_ENTERING_WORLD",
+	"PLAYER_MONEY",
+	"SEND_MAIL_MONEY_CHANGED",
+	"SEND_MAIL_COD_CHANGED",
+	"PLAYER_TRADE_MONEY",
+	"TRADE_MONEY_CHANGED"
+);

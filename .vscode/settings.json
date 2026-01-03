@@ -33,7 +33,8 @@
         "GAME_LOCALE",
         "GetCurrencyListSize",
         "GetCurrencyListInfo",
-        "Krowi_Brokers_EventFrame"
+        "Krowi_Brokers_EventFrame",
+        "KrowiBCU_Options"
     ],
     "Lua.diagnostics.disable": [
         "deprecated",

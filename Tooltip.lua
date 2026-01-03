@@ -299,6 +299,7 @@ function tooltip.Show(frame)
 	GameTooltip:SetPoint("TOPLEFT", frame, "BOTTOMLEFT");
 	GameTooltip:AddLine(addon.Metadata.Title .. " " .. addon.Metadata.Version);
 	GameTooltip_AddBlankLineToTooltip(GameTooltip);
+
 	if tooltipType == addon.L["Money"] then
 		GetDetailedMoneyTooltip();
 	elseif tooltipType == addon.L["Combined"] then
@@ -306,5 +307,6 @@ function tooltip.Show(frame)
 	else
 		GetAllCurrenciesTooltip();
 	end
+
 	GameTooltip:Show();
 end

@@ -13,3 +13,6 @@
 [submodule "Libs/Krowi_Currency"]
 	path = Libs/Krowi_Currency
 	url = https://github.com/TheKrowi/Krowi_Currency
+[submodule "Libs/Krowi_Brokers"]
+	path = Libs/Krowi_Brokers
+	url = https://github.com/TheKrowi/Krowi_Brokers

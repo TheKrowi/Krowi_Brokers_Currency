@@ -8,6 +8,7 @@
     <Include file="Krowi_Util\Krowi_Util-1.0.xml" />
     <Include file="Krowi_Menu\Krowi_Menu-1.0.xml" />
     <Include file="Krowi_Currency\Krowi_Currency-1.0.xml" />
+    <Include file="Krowi_Brokers\Krowi_Brokers-1.0.xml" />
 
     <Script file="Libs.lua" />
 </Ui>

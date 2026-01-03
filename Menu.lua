@@ -9,16 +9,16 @@ function menu.Init()
 	local lib = LibStub("Krowi_MenuBuilder-1.0");
 
 	menuBuilder = lib:New({
-		uniqueTag = "KBC_RIGHT_CLICK_MENU_OPTIONS",
+		uniqueTag = addon.Metadata.Prefix .. "_RIGHT_CLICK_MENU_OPTIONS",
 		callbacks = {
 			OnCheckboxSelect = function(filters, keys)
 				addon.Util.WriteNestedKeys(filters, keys, not menuBuilder:KeyIsTrue(filters, keys));
-				addon.TradersTenderLDB:Update();
+				addon.LDB:Update();
 			end,
 
 			OnRadioSelect = function(filters, keys, value)
 				addon.Util.WriteNestedKeys(filters, keys, value);
-				addon.TradersTenderLDB:Update();
+				addon.LDB:Update();
 			end
 		}
 	});
@@ -38,7 +38,7 @@ local function CreateParentHeaderCheckbox(parentMenu, text, setKey, headerEntry)
 			local newValue = not currentValue;
 			addon.Util.WriteNestedKeys(filters, keys, newValue);
 			addon.Currency.UpdateChildHeaders(headerEntry, newValue);
-			addon.TradersTenderLDB:Update();
+			addon.LDB:Update();
 		end
 	);
 end
@@ -68,9 +68,10 @@ local function CreateHeaderMenu(parentMenu, headerEntry)
 end
 
 local function CreateMenu(menuObj)
-	menuBuilder:CreateTitle(menuObj, addon.L["Currency by Krowi"]);
+	menuBuilder:CreateTitle(menuObj, addon.Metadata.Title .. " " .. addon.Metadata.Version);
 
 	menuBuilder:CreateDivider(menuObj);
+
 	menuBuilder:CreateTitle(menuObj, addon.L["Button Display"]);
 
 	local buttonDisplay = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Show On Button"]);
@@ -84,6 +85,7 @@ local function CreateMenu(menuObj)
 	menuBuilder:AddChildMenu(menuObj, buttonDisplay);
 
 	menuBuilder:CreateDivider(menuObj);
+
 	menuBuilder:CreateTitle(menuObj, addon.L["Tooltip Options"]);
 
 	local defaultTooltip = menuBuilder:CreateSubmenuButton(menuObj, addon.L["Default Tooltip"]);
@@ -91,8 +93,8 @@ local function CreateMenu(menuObj)
 	menuBuilder:CreateRadio(defaultTooltip, addon.L["Money"], KrowiBCU_Options, {"DefaultTooltip"});
 	menuBuilder:CreateRadio(defaultTooltip, addon.L["Combined"], KrowiBCU_Options, {"DefaultTooltip"});
 	menuBuilder:AddChildMenu(menuObj, defaultTooltip);
-
 	menuBuilder:CreateDivider(menuObj);
+
 	local lib = LibStub("Krowi_Currency-1.0");
 	lib:CreateMoneyOptionsMenu(menuObj, menuBuilder, KrowiBCU_Options);
 
@@ -124,7 +126,7 @@ local function CreateMenu(menuObj)
 			if not newValue then
 				addon.ResetSessionTracking();
 			end
-			addon.TradersTenderLDB.Update();
+			addon.LDB.Update();
 		end
 	);
 
@@ -141,6 +143,7 @@ local function CreateMenu(menuObj)
 	menuBuilder:CreateCheckbox(menuObj, addon.L["Show WoW Token"], KrowiBCU_Options, {"ShowWoWToken"});
 
 	menuBuilder:CreateDivider(menuObj);
+
 	lib:CreateCurrencyOptionsMenu(menuObj, menuBuilder, KrowiBCU_Options);
 
 	menuBuilder:CreateCheckbox(menuObj, addon.L["Currency Group By Header"], KrowiBCU_Options, {"CurrencyGroupByHeader"});
