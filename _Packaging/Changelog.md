@@ -1,6 +1,18 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 7.1 - 2026-01-04
+### Added
+- "Right-Click: Options" hint to tooltip
+
+### Changed
+- Removed unused self parameter from OnEvent function
+- Updated Krowi_Brokers library
+- Updated Krowi_Menu library
+
+### Fixed
+- Removed obsolete Krowi_PopupDialog submodule references from .gitmodules
+
 ## 7.0 - 2026-01-03
 ### Changed
 - Extracted broker initialization logic into new Krowi_Brokers-1.0 library for reuse across addons
