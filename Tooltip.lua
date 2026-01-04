@@ -307,6 +307,7 @@ function tooltip.Show(frame)
 	else
 		GetAllCurrenciesTooltip();
 	end
+	GameTooltip:AddLine(addon.L["Right-Click: Options"], 0.5, 0.8, 1);
 
 	GameTooltip:Show();
 end

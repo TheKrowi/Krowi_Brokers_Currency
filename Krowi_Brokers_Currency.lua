@@ -224,7 +224,7 @@ end
 
 local sessionDataLoaded = false;
 local activityCheckTimer = nil;
-local function OnEvent(self, event, ...)
+local function OnEvent(event, ...)
 	if event == "PLAYER_MONEY" or event == "SEND_MAIL_MONEY_CHANGED" or
 	   event == "SEND_MAIL_COD_CHANGED" or event == "PLAYER_TRADE_MONEY" or
 	   event == "TRADE_MONEY_CHANGED" then
