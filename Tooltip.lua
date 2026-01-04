@@ -3,8 +3,9 @@ local _, addon = ...;
 local tooltip = {};
 addon.Tooltip = tooltip;
 
-local GameTooltip = GameTooltip;
-local GameTooltip_AddBlankLineToTooltip = GameTooltip_AddBlankLineToTooltip;
+function tooltip.Init()
+	-- Initialize tooltip if needed
+end
 
 local function HeaderHasCurrencies(headerEntry)
 	if #headerEntry.currencies > 0 then
@@ -21,12 +22,12 @@ end
 
 local function ShouldShowHeader(headerName)
 	local settingKey = addon.GetHeaderSettingKey(headerName);
-	local shouldShow = addon.Util.ReadNestedKeys(KrowiBCU_SavedData, {"HeaderSettings", settingKey});
+	local shouldShow = addon.Util.ReadNestedKeys(KrowiBCU_Options, {"HeaderSettings", settingKey});
 	if shouldShow == nil then return true; end
 	return shouldShow;
 end
 
-local function DisplayHeaderRecursive(headerEntry, depth, abbreviateK, abbreviateM, thousandsSeparator, decimalSeparator)
+local function DisplayHeaderRecursive(headerEntry, depth)
 	if not HeaderHasCurrencies(headerEntry) then
 		return;
 	end
@@ -46,24 +47,19 @@ local function DisplayHeaderRecursive(headerEntry, depth, abbreviateK, abbreviat
 		table.sort(currencies, function(a, b) return a.name < b.name end);
 
 		for _, currency in ipairs(currencies) do
-			local quantity, abbr = addon.AbbreviateValue(currency.quantity, abbreviateK, abbreviateM);
-			quantity = addon.NumToString(quantity, thousandsSeparator, decimalSeparator);
-			GameTooltip:AddDoubleLine(indent .. "  " .. currency.name, quantity .. abbr .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
+			GameTooltip:AddDoubleLine(indent .. "  " .. currency.name, addon.FormatCurrency(currency.quantity) .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
 		end
 	end
 
 	for _, childHeader in pairs(headerEntry.children) do
 		if HeaderHasCurrencies(childHeader) then
-			DisplayHeaderRecursive(childHeader, depth + 1, abbreviateK, abbreviateM, thousandsSeparator, decimalSeparator);
+			DisplayHeaderRecursive(childHeader, depth + 1);
 		end
 	end
 end
 
-function tooltip.GetAllCurrenciesWithHeaderSorted()
+local function GetAllCurrenciesWithHeaderSorted()
 	local headers, orderedHeaderNames = addon.Currency.GetAllCurrenciesWithHeader();
-    local abbreviateK = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1k"];
-    local abbreviateM = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1m"];
-	local thousandsSeparator, decimalSeparator = addon.GetSeparators();
 
 	local hasDisplayedAnyHeader = false;
 	for _, headerName in ipairs(orderedHeaderNames) do
@@ -73,25 +69,20 @@ function tooltip.GetAllCurrenciesWithHeaderSorted()
 				if hasDisplayedAnyHeader then
 					GameTooltip_AddBlankLineToTooltip(GameTooltip);
 				end
-				DisplayHeaderRecursive(headerEntry, 0, abbreviateK, abbreviateM, thousandsSeparator, decimalSeparator);
+				DisplayHeaderRecursive(headerEntry, 0);
 				hasDisplayedAnyHeader = true;
 			end
 		end
 	end
 end
 
-function tooltip.GetAllCurrenciesSorted()
+local function GetAllCurrenciesSorted()
 	local currencies = addon.Currency.GetAllCurrencies();
-    local abbreviateK = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1k"];
-    local abbreviateM = KrowiBCU_SavedData.CurrencyAbbreviate == addon.L["1m"];
-	local thousandsSeparator, decimalSeparator = addon.GetSeparators();
 
 	table.sort(currencies, function(a, b) return a.name < b.name end);
 
 	for _, currency in next, currencies do
-		local quantity, abbr = addon.AbbreviateValue(currency.quantity, abbreviateK, abbreviateM);
-		quantity = addon.NumToString(quantity, thousandsSeparator, decimalSeparator);
-		GameTooltip:AddDoubleLine(currency.name, quantity .. abbr .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
+		GameTooltip:AddDoubleLine(currency.name, addon.FormatCurrency(currency.quantity) .. " |T" .. currency.iconFileID .. ":16|t", 1, 1, 1, 1, 1, 1);
 	end
 end
 
@@ -115,7 +106,7 @@ local function DisplayMoneyContent()
 	local currentKey = currentPlayerName .. "-" .. currentRealmName;
 
 	local characterData = KrowiBCU_SavedData.CharacterData or {};
-	local maxChars = KrowiBCU_SavedData.MaxCharacters or 20;
+	local maxChars = KrowiBCU_Options.MaxCharacters or 20;
 
 	if not next(characterData) then
 		GameTooltip:AddLine(addon.L["No character data available yet"], 0.7, 0.7, 0.7);
@@ -223,7 +214,7 @@ local function DisplayMoneyContent()
 	local totalFormatted = addon.FormatMoney(totalMoney);
 	GameTooltip:AddDoubleLine(addon.L["Total:"], totalFormatted);
 
-	if KrowiBCU_SavedData.ShowWoWToken then
+	if KrowiBCU_Options.ShowWoWToken then
 		C_WowTokenPublic.UpdateMarketPrice();
 		local tokenPrice = C_WowTokenPublic.GetCurrentMarketPrice();
 		if tokenPrice and tokenPrice > 0 then
@@ -235,23 +226,18 @@ local function DisplayMoneyContent()
 end
 
 local function DisplayCurrencyContent()
-	if KrowiBCU_SavedData.CurrencyGroupByHeader then
-		tooltip.GetAllCurrenciesWithHeaderSorted();
+	if KrowiBCU_Options.CurrencyGroupByHeader then
+		GetAllCurrenciesWithHeaderSorted();
 	else
-		tooltip.GetAllCurrenciesSorted();
+		GetAllCurrenciesSorted();
 	end
 end
 
-function tooltip.GetDetailedMoneyTooltip(self)
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
-	GameTooltip:AddLine(addon.Metadata.Title .. " " .. addon.Metadata.Version);
-	GameTooltip_AddBlankLineToTooltip(GameTooltip);
-
+local function GetDetailedMoneyTooltip()
 	DisplayMoneyContent();
 
 	GameTooltip_AddBlankLineToTooltip(GameTooltip);
-	local defaultTooltip = KrowiBCU_SavedData.DefaultTooltip;
+	local defaultTooltip = KrowiBCU_Options.DefaultTooltip;
 	if defaultTooltip == addon.L["Combined"] then
 		GameTooltip:AddLine(addon.L["Release Shift: Show combined"], 0.5, 0.8, 1);
 	elseif defaultTooltip == addon.L["Money"] then
@@ -259,20 +245,13 @@ function tooltip.GetDetailedMoneyTooltip(self)
 	else
 		GameTooltip:AddLine(addon.L["Release Shift: Show currencies"], 0.5, 0.8, 1);
 	end
-
-	GameTooltip:Show();
 end
 
-function tooltip.GetAllCurrenciesTooltip(self)
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
-	GameTooltip:AddLine(addon.Metadata.Title .. " " .. addon.Metadata.Version);
-	GameTooltip_AddBlankLineToTooltip(GameTooltip);
-
+local function GetAllCurrenciesTooltip()
 	DisplayCurrencyContent();
 
 	GameTooltip_AddBlankLineToTooltip(GameTooltip);
-	local defaultTooltip = KrowiBCU_SavedData.DefaultTooltip;
+	local defaultTooltip = KrowiBCU_Options.DefaultTooltip;
 	if defaultTooltip == addon.L["Combined"] then
 		GameTooltip:AddLine(addon.L["Release Ctrl: Show combined"], 0.5, 0.8, 1);
 	elseif defaultTooltip == addon.L["Money"] then
@@ -280,16 +259,9 @@ function tooltip.GetAllCurrenciesTooltip(self)
 	else
 		GameTooltip:AddLine(addon.L["Hold Shift: Show money"], 0.5, 0.8, 1);
 	end
-
-	GameTooltip:Show();
 end
 
-function tooltip.GetCombinedTooltip(self)
-	GameTooltip:SetOwner(self, "ANCHOR_NONE");
-	GameTooltip:SetPoint("TOPLEFT", self, "BOTTOMLEFT");
-	GameTooltip:AddLine(addon.Metadata.Title .. " " .. addon.Metadata.Version);
-	GameTooltip_AddBlankLineToTooltip(GameTooltip);
-
+local function GetCombinedTooltip()
 	DisplayMoneyContent();
 
 	GameTooltip_AddBlankLineToTooltip(GameTooltip);
@@ -301,6 +273,41 @@ function tooltip.GetCombinedTooltip(self)
 	GameTooltip_AddBlankLineToTooltip(GameTooltip);
 	GameTooltip:AddLine(addon.L["Hold Ctrl: Show currencies"], 0.5, 0.8, 1);
 	GameTooltip:AddLine(addon.L["Hold Shift: Show money"], 0.5, 0.8, 1);
+end
+
+function tooltip.Show(frame)
+	local defaultTooltip = KrowiBCU_Options.DefaultTooltip;
+	local shiftPressed = IsShiftKeyDown();
+	local ctrlPressed = IsLeftControlKeyDown() or IsRightControlKeyDown();
+	local tooltipType
+
+	if defaultTooltip == addon.L["Combined"] then
+		if ctrlPressed then
+			tooltipType = addon.L["Currency"];
+		elseif shiftPressed then
+			tooltipType = addon.L["Money"];
+		else
+			tooltipType = addon.L["Combined"];
+		end
+	elseif defaultTooltip == addon.L["Money"] then
+		tooltipType = shiftPressed and addon.L["Currency"] or addon.L["Money"];
+	else
+		tooltipType = shiftPressed and addon.L["Money"] or addon.L["Currency"];
+	end
+
+	GameTooltip:SetOwner(frame, "ANCHOR_NONE");
+	GameTooltip:SetPoint("TOPLEFT", frame, "BOTTOMLEFT");
+	GameTooltip:AddLine(addon.Metadata.Title .. " " .. addon.Metadata.Version);
+	GameTooltip_AddBlankLineToTooltip(GameTooltip);
+
+	if tooltipType == addon.L["Money"] then
+		GetDetailedMoneyTooltip();
+	elseif tooltipType == addon.L["Combined"] then
+		GetCombinedTooltip();
+	else
+		GetAllCurrenciesTooltip();
+	end
+	GameTooltip:AddLine(addon.L["Right-Click: Options"], 0.5, 0.8, 1);
 
 	GameTooltip:Show();
 end

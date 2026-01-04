@@ -1,8 +1,46 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 7.1 - 2026-01-04
+### Added
+- "Right-Click: Options" hint to tooltip
+
+### Changed
+- Removed unused self parameter from OnEvent function
+- Updated Krowi_Brokers library
+- Updated Krowi_Menu library
+
+### Fixed
+- Removed obsolete Krowi_PopupDialog submodule references from .gitmodules
+
+## 7.0 - 2026-01-03
+### Changed
+- Extracted broker initialization logic into new Krowi_Brokers-1.0 library for reuse across addons
+- Refactored event registration and initialization flow to use centralized broker library
+- Improved code organization by consolidating broker setup into standardized library calls
+
+## 6.0 - 2026-01-03
+### Changed
+- Split saved variables into KrowiBCU_Options (settings) and KrowiBCU_SavedData (character data) for better organization (dev note: this will unfortunately reset all settings to defaults)
+- Major code refactoring: Reorganized initialization order and improved code structure throughout main file
+- Fixed prefix/acronym in TOC file from KrowiBC/KBC to KrowiBCU/KBCU for consistency
+- Added localized category tags in TOC file for better addon manager organization
+
+## 5.2 - 2026-01-02
+### Mists Classic
+- Fixed issue where currencies were not properly displayed
+
+## 5.1 - 2026-01-02
+### Fixed
+- Multi addon library usage errors
+
+## 5.0 - 2026-01-02
+### Changed
+- Refactored currency and money formatting into new Krowi_Currency-1.0 library for reuse across addons
+- Extracted formatting functions: FormatMoney(), FormatCurrency(), and supporting utilities into standalone library
+
 ## 4.0 - 2025-12-29
-### Change
+### Changed
 - Menu generation and handling (dev note: for classic user this should be an invisible change; for mainline users this should reflect in modern looking drop down menus)
 
 ### Mists Classic
@@ -39,7 +77,7 @@ All notable changes to this project will be documented in this file.
 - Menu reorganized into logical sections: Button Display, Tooltip Options, Money Options, Currency Options
 
 ## 2.0 - 2025-11-24
-### Change
+### Changed
 - Total rewrite with improved functionality
 
 ## 1.0 - 2025-11-14

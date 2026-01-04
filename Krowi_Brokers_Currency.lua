@@ -1,13 +1,15 @@
 ﻿local addonName, addon = ...;
 
+local currency = LibStub("Krowi_Currency-1.0");
+
 addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName);
 
-KrowiBCU_SavedData = KrowiBCU_SavedData or {
+KrowiBCU_Options = KrowiBCU_Options or {
 	HeaderSettings = {},
-	MoneyLabel = addon.L["Icon"],
-	MoneyAbbreviate = addon.L["None"],
-	ThousandsSeparator = addon.L["Space"],
-	CurrencyAbbreviate = addon.L["None"],
+	MoneyLabel = "Icon",
+	MoneyAbbreviate = "None",
+	ThousandsSeparator = "Space",
+	CurrencyAbbreviate = "None",
 	MoneyGoldOnly = false,
 	MoneyColored = true,
 	CurrencyGroupByHeader = true,
@@ -29,34 +31,6 @@ KrowiBCU_SavedData = KrowiBCU_SavedData or {
 	SessionLastUpdate = 0
 };
 
-function addon.AbbreviateValue(value, abbreviateK, abbreviateM)
-	if abbreviateK and value >= 1000 then
-		return math.floor(value / 1000), "k";
-	elseif abbreviateM and value >= 1000000 then
-		return math.floor(value / 1000000), "m";
-	end
-	return value, "";
-end
-
-function addon.GetSeparators()
-	if (KrowiBCU_SavedData.ThousandsSeparator == addon.L["Space"]) then
-		return " ", ".";
-	elseif (KrowiBCU_SavedData.ThousandsSeparator == addon.L["Period"]) then
-		return ".", ",";
-	elseif (KrowiBCU_SavedData.ThousandsSeparator == addon.L["Comma"]) then
-		return ",", ".";
-	end
-	return "", "";
-end
-
-function addon.GetHeaderSettingKey(headerName)
-	return "ShowHeader_" .. headerName:gsub(" ", "_");
-end
-
-local function BreakMoney(value)
-	return math.floor(value / 10000), math.floor((value % 10000) / 100), value % 100;
-end
-
 local function GetFontSize()
 	local fontSize = 12;
 	if TitanPanelGetVar then
@@ -65,70 +39,61 @@ local function GetFontSize()
 	return select(2, GameFontNormal:GetFont()) or fontSize;
 end
 
-function addon.NumToString(amount, thousands_separator, decimal_separator)
-	if type(amount) ~= "number" then
-		return "0";
-	end
+function addon.GetOptionsForLib()
+	local options = KrowiBCU_Options;
+	return {
+		MoneyLabel = options.MoneyLabel,
+		MoneyAbbreviate = options.MoneyAbbreviate,
+		ThousandsSeparator = options.ThousandsSeparator,
+		MoneyGoldOnly = options.MoneyGoldOnly,
+		MoneyColored = options.MoneyColored,
+		CurrencyAbbreviate = options.CurrencyAbbreviate,
+		GoldLabel = addon.L["Gold Label"],
+		SilverLabel = addon.L["Silver Label"],
+		CopperLabel = addon.L["Copper Label"],
+		TextureSize = GetFontSize()
+	};
+end
 
-	if amount > 99999999999999 then
-		return tostring(amount);
-	end
-
-	local sign, int, frac = tostring(amount):match('([-]?)(%d+)([.]?%d*)');
-	int = int:reverse():gsub("(%d%d%d)", "%1|");
-	int = int:reverse():gsub("^|", "");
-	int = int:gsub("%.", decimal_separator);
-	int = int:gsub("|", thousands_separator);
-
-	return sign .. int .. frac;
+function addon.GetHeaderSettingKey(headerName)
+	return "ShowHeader_" .. headerName:gsub(" ", "_");
 end
 
 function addon.FormatMoney(value)
-	local thousandsSeparator, decimalSeparator = addon.GetSeparators();
-
-	local gold, silver, copper, abbr = BreakMoney(value);
-
-	local moneyAbbreviateK = KrowiBCU_SavedData.MoneyAbbreviate == addon.L["1k"];
-	local moneyAbbreviateM = KrowiBCU_SavedData.MoneyAbbreviate == addon.L["1m"];
-	gold, abbr = addon.AbbreviateValue(gold, moneyAbbreviateK, moneyAbbreviateM);
-	gold = addon.NumToString(gold, thousandsSeparator, decimalSeparator);
-
-	local goldLabel, silverLabel, copperLabel = "", "", "";
-	if KrowiBCU_SavedData.MoneyLabel == addon.L["Text"] then
-		goldLabel = addon.L["Gold Label"];
-		silverLabel = addon.L["Silver Label"];
-		copperLabel = addon.L["Copper Label"];
-	elseif KrowiBCU_SavedData.MoneyLabel == addon.L["Icon"] then
-		local font_size = GetFontSize();
-		local icon_pre = "|TInterface\\MoneyFrame\\";
-		local icon_post = ":" .. font_size .. ":" .. font_size .. ":2:0|t";
-		goldLabel = icon_pre .. "UI-GoldIcon" .. icon_post;
-		silverLabel = icon_pre .. "UI-SilverIcon" .. icon_post;
-		copperLabel = icon_pre .. "UI-CopperIcon" .. icon_post;
-	end
-
-	local colors = KrowiBCU_SavedData.MoneyColored and {
-		coin_gold = "ffd100",
-		coin_silver = "e6e6e6",
-		coin_copper = "c8602c",
-	} or {
-        coin_gold = "ffffff",
-        coin_silver = "ffffff",
-        coin_copper = "ffffff",
-    };
-
-	local outstr = "|cff" .. colors.coin_gold .. gold .. abbr .. goldLabel .. "|r";
-
-	if not KrowiBCU_SavedData.MoneyGoldOnly then
-		outstr = outstr .. " " .. "|cff" .. colors.coin_silver .. silver .. silverLabel .. "|r";
-		outstr = outstr .. " " .. "|cff" .. colors.coin_copper .. copper .. copperLabel .. "|r";
-	end
-
-	return outstr;
+	return currency:FormatMoney(value, addon.GetOptionsForLib());
 end
 
-local function GetFormattedMoney()
-	local displayMode = KrowiBCU_SavedData.ButtonDisplay;
+function addon.FormatCurrency(value)
+	return currency:FormatCurrency(value, addon.GetOptionsForLib());
+end
+
+function addon.GetSessionProfit()
+	return KrowiBCU_SavedData.SessionProfit or 0;
+end
+
+function addon.GetSessionSpent()
+	return KrowiBCU_SavedData.SessionSpent or 0;
+end
+
+function addon.ResetSessionTracking()
+	KrowiBCU_SavedData.SessionProfit = 0;
+	KrowiBCU_SavedData.SessionSpent = 0;
+	KrowiBCU_SavedData.SessionLastUpdate = time();
+end
+
+function addon.GetWarbandMoney()
+	local warbandMoney = 0;
+	if C_Bank and C_Bank.FetchDepositedMoney and Enum and Enum.BankType then
+		local money = C_Bank.FetchDepositedMoney(Enum.BankType.Account);
+		if type(money) == "number" then
+			warbandMoney = money;
+		end
+	end
+	return warbandMoney;
+end
+
+function addon.GetDisplayText()
+	local displayMode = KrowiBCU_Options.ButtonDisplay;
 	local currentRealmName = GetRealmName() or "Unknown";
 	local currentFaction = UnitFactionGroup("player") or "Neutral";
 	local characterData = KrowiBCU_SavedData.CharacterData or {};
@@ -166,10 +131,49 @@ local function GetFormattedMoney()
 	end
 end
 
+local function OnClick(self, button)
+	if button == "LeftButton" then
+		ToggleAllBags();
+		return;
+	end
+
+	if button ~= "RightButton" then
+		return;
+	end
+
+	addon.Menu.ShowPopup();
+end
+
+local function OnEnter(self)
+	addon.Tooltip.Show(self);
+
+	local lastShiftState = IsShiftKeyDown();
+	local lastCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
+	local throttle = 0;
+	self:SetScript("OnUpdate", function(frame, elapsed)
+		throttle = throttle + elapsed;
+		if throttle < 0.1 then return; end
+		throttle = 0;
+
+		local currentShiftState = IsShiftKeyDown();
+		local currentCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
+		if currentShiftState ~= lastShiftState or currentCtrlState ~= lastCtrlState then
+			lastShiftState = currentShiftState;
+			lastCtrlState = currentCtrlState;
+			addon.Tooltip.Show(frame);
+		end
+	end);
+end
+
+local function OnLeave(self)
+	self:SetScript("OnUpdate", nil);
+	GameTooltip:Hide();
+end
+
 local function CheckSessionExpiration()
 	local currentTime = time();
 	local lastUpdate = KrowiBCU_SavedData.SessionLastUpdate or 0;
-	local duration = KrowiBCU_SavedData.SessionDuration or 3600;
+	local duration = KrowiBCU_Options.SessionDuration or 3600;
 
 	if currentTime - lastUpdate > duration then
 		KrowiBCU_SavedData.SessionProfit = 0;
@@ -182,31 +186,6 @@ end
 
 local function UpdateSessionActivity()
 	KrowiBCU_SavedData.SessionLastUpdate = time();
-end
-
-function addon.GetSessionProfit()
-	return KrowiBCU_SavedData.SessionProfit or 0;
-end
-
-function addon.GetSessionSpent()
-	return KrowiBCU_SavedData.SessionSpent or 0;
-end
-
-function addon.ResetSessionTracking()
-	KrowiBCU_SavedData.SessionProfit = 0;
-	KrowiBCU_SavedData.SessionSpent = 0;
-	KrowiBCU_SavedData.SessionLastUpdate = time();
-end
-
-function addon.GetWarbandMoney()
-	local warbandMoney = 0;
-	if C_Bank and C_Bank.FetchDepositedMoney and Enum and Enum.BankType then
-		local money = C_Bank.FetchDepositedMoney(Enum.BankType.Account);
-		if type(money) == "number" then
-			warbandMoney = money;
-		end
-	end
-	return warbandMoney;
 end
 
 local function UpdateCharacterData()
@@ -223,7 +202,7 @@ local function UpdateCharacterData()
 	local oldMoney = (oldData and oldData.money) or currentMoney;
 
 	local change = currentMoney - oldMoney;
-	if change ~= 0 and KrowiBCU_SavedData.TrackSessionGold then
+	if change ~= 0 and KrowiBCU_Options.TrackSessionGold then
 		if change > 0 then
 			KrowiBCU_SavedData.SessionProfit = (KrowiBCU_SavedData.SessionProfit or 0) + change;
 		elseif change < 0 then
@@ -245,153 +224,52 @@ end
 
 local sessionDataLoaded = false;
 local activityCheckTimer = nil;
-local function OnEvent(self, event, ...)
-	if event == "PLAYER_MONEY" or event == "SEND_MAIL_MONEY_CHANGED" or 
-	   event == "SEND_MAIL_COD_CHANGED" or event == "PLAYER_TRADE_MONEY" or 
+local function OnEvent(event, ...)
+	if event == "PLAYER_MONEY" or event == "SEND_MAIL_MONEY_CHANGED" or
+	   event == "SEND_MAIL_COD_CHANGED" or event == "PLAYER_TRADE_MONEY" or
 	   event == "TRADE_MONEY_CHANGED" then
 		UpdateCharacterData();
-		addon.TradersTenderLDB.Update();
+		addon.LDB:Update();
 	elseif event == "PLAYER_ENTERING_WORLD" then
-		if not sessionDataLoaded then
-			CheckSessionExpiration();
-			sessionDataLoaded = true;
-
-			if not activityCheckTimer then
-				local interval = KrowiBCU_SavedData.SessionActivityCheckInterval or 600;
-				activityCheckTimer = C_Timer.NewTicker(interval, function()
-					UpdateSessionActivity();
-				end);
-			end
-		end
-
 		UpdateCharacterData();
-		addon.TradersTenderLDB.Update();
-	end
-end
+		addon.LDB:Update();
 
--- local function OnShow(self)
--- 	print("LDB OnShow");
---     self:RegisterEvent("PLAYER_MONEY");
--- 	self:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
--- 	self:RegisterEvent("SEND_MAIL_COD_CHANGED");
--- 	self:RegisterEvent("PLAYER_TRADE_MONEY");
--- 	self:RegisterEvent("TRADE_MONEY_CHANGED");
--- 	addon.TradersTenderLDB.Update();
--- end
-
--- local function OnHide(self)
--- 	print("LDB OnHide");
---     self:UnregisterEvent("PLAYER_MONEY");
--- 	self:UnregisterEvent("SEND_MAIL_MONEY_CHANGED");
--- 	self:UnregisterEvent("SEND_MAIL_COD_CHANGED");
--- 	self:UnregisterEvent("PLAYER_TRADE_MONEY");
--- 	self:UnregisterEvent("TRADE_MONEY_CHANGED");
--- end
-
-local function OnClick(self, button)
-	if button == "LeftButton" then
-		ToggleAllBags();
-		return;
-	end
-
-	if button ~= "RightButton" then
-		return;
-	end
-
-	addon.Menu.ShowPopup();
-end
-
-local function ShowTooltip(self, forceType)
-	local tooltipType = forceType;
-	if not tooltipType then
-		local defaultTooltip = KrowiBCU_SavedData.DefaultTooltip;
-		local shiftPressed = IsShiftKeyDown();
-		local ctrlPressed = IsLeftControlKeyDown() or IsRightControlKeyDown();
-
-		if defaultTooltip == addon.L["Combined"] then
-			if ctrlPressed then
-				tooltipType = addon.L["Currency"];
-			elseif shiftPressed then
-				tooltipType = addon.L["Money"];
-			else
-				tooltipType = addon.L["Combined"];
-			end
-		elseif defaultTooltip == addon.L["Money"] then
-			tooltipType = shiftPressed and addon.L["Currency"] or addon.L["Money"];
-		else
-			tooltipType = shiftPressed and addon.L["Money"] or addon.L["Currency"];
+		if sessionDataLoaded then
+			return
 		end
-	end
 
-	if tooltipType == addon.L["Money"] then
-		addon.Tooltip.GetDetailedMoneyTooltip(self);
-	elseif tooltipType == addon.L["Combined"] then
-		addon.Tooltip.GetCombinedTooltip(self);
-	else
-		addon.Tooltip.GetAllCurrenciesTooltip(self);
-	end
-end
+		CheckSessionExpiration();
+		sessionDataLoaded = true;
 
-local function OnEnter(self)
-	ShowTooltip(self);
-
-	local lastShiftState = IsShiftKeyDown();
-	local lastCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
-	local throttle = 0;
-	self:SetScript("OnUpdate", function(frame, elapsed)
-		throttle = throttle + elapsed;
-		if throttle < 0.1 then return; end
-		throttle = 0;
-
-		local currentShiftState = IsShiftKeyDown();
-		local currentCtrlState = IsLeftControlKeyDown() or IsRightControlKeyDown();
-		if currentShiftState ~= lastShiftState or currentCtrlState ~= lastCtrlState then
-			lastShiftState = currentShiftState;
-			lastCtrlState = currentCtrlState;
-			ShowTooltip(frame);
+		if activityCheckTimer then
+			return
 		end
-	end);
-end
 
-local function OnLeave(self)
-	GameTooltip:Hide();
-	self:SetScript("OnUpdate", nil);
-end
-
-local function Create_Frames()
-	local LDB = LibStub("LibDataBroker-1.1", true);
-	if not LDB then
-		return;
+		local interval = KrowiBCU_Options.SessionActivityCheckInterval or 600;
+		activityCheckTimer = C_Timer.NewTicker(interval, function()
+			UpdateSessionActivity();
+		end);
 	end
-
-	addon.Menu.Init();
-
-	local TradersTenderLDB = LDB:NewDataObject("Krowi_Brokers_Currency", {
-		type = "data source",
-		tocname = "Krowi_Brokers_Currency",
-		text = GetFormattedMoney(),
-		icon = addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
-		category = "Information",
-		OnEnter = OnEnter,
-		OnLeave = OnLeave,
-		OnClick = OnClick,
-	});
-
-	-- TradersTenderLDB.OnShow = OnShow;
-	-- TradersTenderLDB.OnHide = OnHide;
-	TradersTenderLDB.Update = function()
-		TradersTenderLDB.text = GetFormattedMoney();
-	end
-	addon.TradersTenderLDB = TradersTenderLDB;
-
-	local ldbFrame = CreateFrame("Frame");
-	ldbFrame:RegisterEvent("PLAYER_ENTERING_WORLD");
-    ldbFrame:RegisterEvent("PLAYER_MONEY");
-	ldbFrame:RegisterEvent("SEND_MAIL_MONEY_CHANGED");
-	ldbFrame:RegisterEvent("SEND_MAIL_COD_CHANGED");
-	ldbFrame:RegisterEvent("PLAYER_TRADE_MONEY");
-	ldbFrame:RegisterEvent("TRADE_MONEY_CHANGED");
-	ldbFrame:SetScript("OnEvent", OnEvent);
 end
 
-Create_Frames();
+local brokers = LibStub("Krowi_Brokers-1.0");
+brokers:InitBroker(
+	addonName,
+	addon,
+	addon.Util.IsMainline and "interface\\icons\\inv_misc_curiouscoin" or "interface\\icons\\inv_misc_coin_01",
+	OnEnter,
+	OnLeave,
+	OnClick,
+	OnEvent,
+	addon.GetDisplayText,
+	addon.Menu,
+	addon.Tooltip
+)
+brokers:RegisterEvents(
+	"PLAYER_ENTERING_WORLD",
+	"PLAYER_MONEY",
+	"SEND_MAIL_MONEY_CHANGED",
+	"SEND_MAIL_COD_CHANGED",
+	"PLAYER_TRADE_MONEY",
+	"TRADE_MONEY_CHANGED"
+);
