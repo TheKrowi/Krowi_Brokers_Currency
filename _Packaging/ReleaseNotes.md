@@ -13,3 +13,12 @@
 
 ### Fixed (7.1)
 - Removed obsolete Krowi_PopupDialog submodule references from .gitmodules
+
+### Fixed (7.2)
+- Fixed Krowi_Brokers library to properly handle multiple addon instances by passing addon context as parameters
+- Fixed Menu.ShowPopup to accept caller parameter for proper context menu positioning
+
+### Changed (7.2)
+- Simplified InitBroker call by removing redundant parameters now handled by the library
+- Updated Krowi_Brokers library to version with multi-addon support
+- Improved menu refresh callback organization

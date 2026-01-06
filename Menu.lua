@@ -1,9 +1,13 @@
-local _, addon = ...;
+local addonName, addon = ...;
 
 local menu = {};
 addon.Menu = menu;
 
 local menuBuilder;
+
+function menu.RefreshBroker()
+	addon.LDB:Update()
+end
 
 function menu.Init()
 	local lib = LibStub("Krowi_MenuBuilder-1.0");
@@ -13,15 +17,15 @@ function menu.Init()
 		callbacks = {
 			OnCheckboxSelect = function(filters, keys)
 				addon.Util.WriteNestedKeys(filters, keys, not menuBuilder:KeyIsTrue(filters, keys));
-				addon.LDB:Update();
+				menu.RefreshBroker()
 			end,
 
 			OnRadioSelect = function(filters, keys, value)
 				addon.Util.WriteNestedKeys(filters, keys, value);
-				addon.LDB:Update();
+				menu.RefreshBroker()
 			end
 		}
-	});
+	})
 end
 
 local function CreateParentHeaderCheckbox(parentMenu, text, setKey, headerEntry)
@@ -67,7 +71,7 @@ local function CreateHeaderMenu(parentMenu, headerEntry)
 	menuBuilder:AddChildMenu(parentMenu, headerSubmenu);
 end
 
-local function CreateMenu(menuObj)
+local function CreateMenu(menuObj, caller)
 	menuBuilder:CreateTitle(menuObj, addon.Metadata.Title .. " " .. addon.Metadata.Version);
 
 	menuBuilder:CreateDivider(menuObj);
@@ -158,11 +162,14 @@ local function CreateMenu(menuObj)
 		end
 	end
 	menuBuilder:AddChildMenu(menuObj, headerVisibility);
+
+	menu.CreateElvUIOptionsMenu(menuBuilder, menuObj, caller)
+	menu.CreateTitanOptionsMenu(menuBuilder, menuObj, caller)
 end
 
-function menu.ShowPopup()
+function menu.ShowPopup(caller)
 	menuBuilder:ShowPopup(function()
-		local menuObj = menuBuilder:GetMenu();
-		CreateMenu(menuObj);
-	end);
+		local menuObj = menuBuilder:GetMenu()
+		CreateMenu(menuObj, caller)
+	end)
 end

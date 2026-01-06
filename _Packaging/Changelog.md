@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 7.2 - 2026-01-06
+### Fixed
+- Fixed Krowi_Brokers library to properly handle multiple addon instances by passing addon context as parameters
+- Fixed Menu.ShowPopup to accept caller parameter for proper context menu positioning
+
+### Changed
+- Simplified InitBroker call by removing redundant parameters now handled by the library
+- Updated Krowi_Brokers library to version with multi-addon support
+- Improved menu refresh callback organization
+
 ## 7.1 - 2026-01-04
 ### Added
 - "Right-Click: Options" hint to tooltip
