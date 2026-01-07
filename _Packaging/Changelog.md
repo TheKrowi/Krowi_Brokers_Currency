@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 8.0 - 2026-01-07
+### Added
+- Character list menu with visibility toggles for individual characters
+- Select All / Deselect All buttons for character visibility
+- Character list automatically splits into submenus of 20 characters when exceeding 20 total characters
+- 'Show New Characters' option to control default visibility for newly discovered characters
+- Combined tooltip variants: 'Combined (Money First)' and 'Combined (Currency First)' as separate options
+
 ## 7.2 - 2026-01-06
 ### Fixed
 - Fixed Krowi_Brokers library to properly handle multiple addon instances by passing addon context as parameters
@@ -13,7 +21,7 @@ All notable changes to this project will be documented in this file.
 
 ## 7.1 - 2026-01-04
 ### Added
-- "Right-Click: Options" hint to tooltip
+- 'Right-Click: Options' hint to tooltip
 
 ### Changed
 - Removed unused self parameter from OnEvent function

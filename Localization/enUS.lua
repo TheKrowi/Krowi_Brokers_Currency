@@ -1,11 +1,11 @@
-local _, addon = ...;
-local L = addon.Localization.GetDefaultLocale();
-addon.L = L;
+local _, addon = ...
+local L = addon.Localization.GetDefaultLocale()
+addon.L = L
 
 -- [[ https://legacy.curseforge.com/wow/addons/krowi-brokers-currency/localization ]] --
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
--- [[ Exported at 2026-01-06 22-42-26 ]] --
+-- [[ Exported at 2026-01-07 23-10-16 ]] --
 L["1 Hour"] = true
 L["12 Hours"] = true
 L["2 Hours"] = true
@@ -18,7 +18,8 @@ L["Alliance:"] = true
 L["Button Display"] = true
 L["Character Gold"] = true
 L["Characters:"] = true
-L["Combined"] = true
+L["Combined (Currency First)"] = true
+L["Combined (Money First)"] = true
 L["Copper Label"] = "c"
 L["Currency"] = true
 L["Currency Group By Header"] = true
@@ -36,6 +37,7 @@ L["Hold Shift: Show money"] = true
 L["Horde:"] = true
 L["Max Characters"] = true
 L["Money"] = true
+L["more character"] = true
 L["more characters"] = true
 L["No character data available yet"] = true
 L["Realm Total"] = true
@@ -46,6 +48,7 @@ L["Release Shift: Show money"] = true
 L["Right-Click: Options"] = true
 L["Session Duration"] = true
 L["Session:"] = true
+L["Show New Characters"] = true
 L["Show On Button"] = true
 L["Show WoW Token"] = true
 L["Silver Label"] = "s"

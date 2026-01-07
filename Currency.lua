@@ -1,10 +1,10 @@
-local _, addon = ...;
+local _, addon = ...
 
-local currency = {};
-addon.Currency = currency;
+local currency = {}
+addon.Currency = currency
 
-local C_CurrencyInfo = C_CurrencyInfo;
-C_CurrencyInfo.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize;
+local C_CurrencyInfo = C_CurrencyInfo
+C_CurrencyInfo.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize
 C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or function(index)
 	local name, isHeader, isExpanded, isUnused, isWatched, count, icon, maximum, hasWeeklyLimit, currentWeeklyAmount, _, itemID = GetCurrencyListInfo(index)
 	return {
@@ -20,22 +20,22 @@ C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or funct
 		quantityEarnedThisWeek = currentWeeklyAmount,
 		currencyID = itemID,
 		currencyListDepth = isHeader and 0 or 1,
-	};
-end;
+	}
+end
 
-local headerStack = {};
-local headerOrder = {};
+local headerStack = {}
+local headerOrder = {}
 
 local function GetNextCurrencyWithHeader(currencies, startIndex)
-	local size = C_CurrencyInfo.GetCurrencyListSize();
+	local size = C_CurrencyInfo.GetCurrencyListSize()
 	for i = startIndex, size do
-		local info = C_CurrencyInfo.GetCurrencyListInfo(i);
+		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
 		if info.isHeader then
-			local depth = info.currencyListDepth;
+			local depth = info.currencyListDepth
 
 			-- Trim stack to current depth
 			while #headerStack > depth do
-				table.remove(headerStack);
+				table.remove(headerStack)
 			end
 
 			local headerEntry = {
@@ -43,95 +43,95 @@ local function GetNextCurrencyWithHeader(currencies, startIndex)
 				depth = depth,
 				children = {},
 				currencies = {}
-			};
+			}
 
 			if depth == 0 then
-				currencies[info.name] = headerEntry;
-				tinsert(headerOrder, info.name);
-				headerStack = {headerEntry};
+				currencies[info.name] = headerEntry
+				tinsert(headerOrder, info.name)
+				headerStack = {headerEntry}
 			else
 				if headerStack[depth] then
-					headerStack[depth].children[info.name] = headerEntry;
+					headerStack[depth].children[info.name] = headerEntry
 				end
-				headerStack[depth + 1] = headerEntry;
+				headerStack[depth + 1] = headerEntry
 			end
 
 			if not info.isHeaderExpanded then
-				C_CurrencyInfo.ExpandCurrencyList(i, true);
-				return false, i + 1;
+				C_CurrencyInfo.ExpandCurrencyList(i, true)
+				return false, i + 1
 			end
 		elseif #headerStack > 0 and not (KrowiBCU_Options.CurrencyHideUnused and info.isTypeUnused) then
-			local currentHeader = headerStack[#headerStack];
+			local currentHeader = headerStack[#headerStack]
 			if currentHeader then
-				tinsert(currentHeader.currencies, info);
+				tinsert(currentHeader.currencies, info)
 			end
 		end
 	end
-	return true, size + 1;
+	return true, size + 1
 end
 
 function currency.GetAllCurrenciesWithHeader()
-	local currencies = {};
-	headerOrder = {};
-	local finished, nextIndex = false, 1;
+	local currencies = {}
+	headerOrder = {}
+	local finished, nextIndex = false, 1
 	while not finished do
-		finished, nextIndex = GetNextCurrencyWithHeader(currencies, nextIndex);
+		finished, nextIndex = GetNextCurrencyWithHeader(currencies, nextIndex)
 	end
-	return currencies, headerOrder;
+	return currencies, headerOrder
 end
 
 function currency.GetAllAvailableHeaders()
-	local headers = currency.GetAllCurrenciesWithHeader();
-	local headerList = {};
+	local headers = currency.GetAllCurrenciesWithHeader()
+	local headerList = {}
 
 	local function AddHeadersRecursive(headerEntry, parentPath)
-		local currentPath = parentPath and (parentPath .. " > " .. headerEntry.name) or headerEntry.name;
+		local currentPath = parentPath and (parentPath .. ' > ' .. headerEntry.name) or headerEntry.name
 		tinsert(headerList, {
 			name = headerEntry.name,
 			path = currentPath,
 			depth = headerEntry.depth
-		});
+		})
 
 		for _, childHeader in pairs(headerEntry.children) do
-			AddHeadersRecursive(childHeader, currentPath);
+			AddHeadersRecursive(childHeader, currentPath)
 		end
 	end
 
 	for _, headerEntry in pairs(headers) do
-		AddHeadersRecursive(headerEntry);
+		AddHeadersRecursive(headerEntry)
 	end
 
-	return headerList;
+	return headerList
 end
 
 function currency.UpdateChildHeaders(headerEntry, newValue)
 	for _, childHeader in pairs(headerEntry.children) do
-		local childSettingKey = addon.GetHeaderSettingKey(childHeader.name);
-		addon.Util.WriteNestedKeys(KrowiBCU_Options, {"HeaderSettings", childSettingKey}, newValue);
-		currency.UpdateChildHeaders(childHeader, newValue);
+		local childSettingKey = addon.GetHeaderSettingKey(childHeader.name)
+		addon.Util.WriteNestedKeys(KrowiBCU_Options, {'HeaderSettings', childSettingKey}, newValue)
+		currency.UpdateChildHeaders(childHeader, newValue)
 	end
 end
 
 local function GetNextCurrency(currencies, startIndex)
-	local size = C_CurrencyInfo.GetCurrencyListSize();
+	local size = C_CurrencyInfo.GetCurrencyListSize()
 	for i = startIndex, size do
-		local info = C_CurrencyInfo.GetCurrencyListInfo(i);
+		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
 		if info.isHeader then
 			if not info.isHeaderExpanded then
-				C_CurrencyInfo.ExpandCurrencyList(i, true);
-				return false, i + 1;
+				C_CurrencyInfo.ExpandCurrencyList(i, true)
+				return false, i + 1
 			end
 		elseif not (KrowiBCU_Options.CurrencyHideUnused and info.isTypeUnused) then
-			tinsert(currencies, info);
+			tinsert(currencies, info)
 		end
 	end
-	return true, size + 1;
+	return true, size + 1
 end
 
 function currency.GetAllCurrencies()
-	local currencies, finished, nextIndex = {}, false, 1;
+	local currencies, finished, nextIndex = {}, false, 1
 	while not finished do
-		finished, nextIndex = GetNextCurrency(currencies, nextIndex);
+		finished, nextIndex = GetNextCurrency(currencies, nextIndex)
 	end
-	return currencies;
+	return currencies
 end
