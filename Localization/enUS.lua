@@ -1,8 +1,6 @@
 local _, addon = ...
-local L = addon.Localization.GetDefaultLocale()
-addon.L = L
+local L = addon.Localization.NewDefaultLocale()
 
--- [[ https://legacy.curseforge.com/wow/addons/krowi-brokers-currency/localization ]] --
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
 -- [[ Exported at 2026-01-07 23-10-16 ]] --
@@ -60,3 +58,4 @@ L["Track Session Gold"] = true
 L["Warband Bank"] = true
 L["Warband Bank:"] = true
 L["WoW Token:"] = true
+L['Characters'] = true

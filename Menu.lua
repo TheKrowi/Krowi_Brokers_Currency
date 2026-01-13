@@ -10,9 +10,7 @@ function menu.RefreshBroker()
 end
 
 function menu.Init()
-	local lib = LibStub('Krowi_MenuBuilder-1.0')
-
-	menuBuilder = lib:New({
+	menuBuilder = addon.MenuBuilder:New({
 		uniqueTag = addon.Metadata.Prefix .. '_RIGHT_CLICK_MENU_OPTIONS',
 		callbacks = {
 			OnCheckboxSelect = function(filters, keys)
@@ -181,8 +179,7 @@ end
 
 local function CreateMoneyMenu(parentMenu)
 	local money = menuBuilder:CreateSubmenuButton(parentMenu, addon.L['Money'])
-	local lib = LibStub('Krowi_Currency-1.0')
-	lib:CreateMoneyOptionsMenu(money, menuBuilder, KrowiBCU_Options, false)
+	addon.CurrencyLib:CreateMoneyOptionsMenu(money, menuBuilder, KrowiBCU_Options, false)
 
 	CreateMaxCharactersMenu(money)
 	CreateCharacterListMenu(money)
@@ -228,9 +225,8 @@ local function CreateHeaderVisibilityMenu(parentMenu)
 end
 
 local function CreateCurrencyMenu(parentMenu)
-	local lib = LibStub('Krowi_Currency-1.0')
 	local currency = menuBuilder:CreateSubmenuButton(parentMenu, addon.L['Currency'])
-	lib:CreateCurrencyOptionsMenu(currency, menuBuilder, KrowiBCU_Options, false)
+	addon.CurrencyLib:CreateCurrencyOptionsMenu(currency, menuBuilder, KrowiBCU_Options, false)
 
 	menuBuilder:CreateCheckbox(currency, addon.L['Currency Group By Header'], KrowiBCU_Options, {'CurrencyGroupByHeader'})
 	menuBuilder:CreateCheckbox(currency, addon.L['Currency Hide Unused'], KrowiBCU_Options, {'CurrencyHideUnused'})

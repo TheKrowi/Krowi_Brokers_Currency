@@ -1,14 +1,12 @@
 <Ui>
-    <Script file="LibStub\LibStub.lua" />
+    <Include file="Krowi_Util\Krowi_Util.xml" />
+    
     <Script file="CallbackHandler-1.0\CallbackHandler-1.0.lua" />
     <Script file="LibDataBroker-1.1\LibDataBroker-1.1.lua" />
 
-    <Include file="AceLocale-3.0\AceLocale-3.0.xml" />
-
-    <Include file="Krowi_Util\Krowi_Util-1.0.xml" />
-    <Include file="Krowi_Menu\Krowi_Menu-1.0.xml" />
-    <Include file="Krowi_Currency\Krowi_Currency-1.0.xml" />
-    <Include file="Krowi_Brokers\Krowi_Brokers-1.0.xml" />
+    <Include file="Krowi_Menu\Krowi_Menu.xml" />
+    <Include file="Krowi_Currency\Krowi_Currency.xml" />
+    <Include file="Krowi_Brokers\Krowi_Brokers.xml" />
 
     <Script file="Libs.lua" />
 </Ui>

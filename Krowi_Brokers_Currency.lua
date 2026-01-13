@@ -1,8 +1,6 @@
 ﻿local addonName, addon = ...
 
-local currency = LibStub('Krowi_Currency-1.0')
-
-addon.L = LibStub(addon.Libs.AceLocale):GetLocale(addonName)
+print('currency formatmoney addon', addon.Currency, addon.Currency.FormatMoney)
 
 local defaultOptions = {
 	HeaderSettings = {},
@@ -74,12 +72,12 @@ function addon.GetHeaderSettingKey(headerName)
 	return 'ShowHeader_' .. headerName:gsub(' ', '_')
 end
 
-function addon.FormatMoney(value)
-	return currency:FormatMoney(value, addon.GetOptionsForLib())
+function addon:FormatMoney(value)
+	return self.CurrencyLib:FormatMoney(value, self.GetOptionsForLib())
 end
 
-function addon.FormatCurrency(value)
-	return currency:FormatCurrency(value, addon.GetOptionsForLib())
+function addon:FormatCurrency(value)
+	return self.CurrencyLib:FormatCurrency(value, self.GetOptionsForLib())
 end
 
 function addon.GetSessionProfit()
@@ -107,26 +105,26 @@ function addon.GetWarbandMoney()
 	return warbandMoney
 end
 
-function addon.GetDisplayText()
+function addon:GetDisplayText()
 	local displayMode = KrowiBCU_Options.ButtonDisplay
 	local currentRealmName = GetRealmName() or 'Unknown'
 	local currentFaction = UnitFactionGroup('player') or 'Neutral'
 
 	if displayMode == 'CharacterGold' then
-		return addon.FormatMoney(GetMoney())
+		return self:FormatMoney(GetMoney())
 	elseif displayMode == 'FactionTotal' then
-		return addon.FormatMoney(addon.CharacterData.GetFactionTotal(currentFaction))
+		return self:FormatMoney(self.CharacterData.GetFactionTotal(currentFaction))
 	elseif displayMode == 'RealmTotal' then
-		return addon.FormatMoney(addon.CharacterData.GetRealmTotal(currentRealmName))
+		return self:FormatMoney(self.CharacterData.GetRealmTotal(currentRealmName))
 	elseif displayMode == 'AccountTotal' then
-		local accountTotal = addon.CharacterData.GetAccountTotal()
-		local warbandMoney = addon.GetWarbandMoney()
-		return addon.FormatMoney(accountTotal + warbandMoney)
+		local accountTotal = self.CharacterData.GetAccountTotal()
+		local warbandMoney = self.GetWarbandMoney()
+		return self:FormatMoney(accountTotal + warbandMoney)
 	elseif displayMode == 'WarbandBank' then
-		local warbandMoney = addon.GetWarbandMoney()
-		return addon.FormatMoney(warbandMoney)
+		local warbandMoney = self.GetWarbandMoney()
+		return self:FormatMoney(warbandMoney)
 	else
-		return addon.FormatMoney(GetMoney())
+		return self:FormatMoney(GetMoney())
 	end
 end
 
@@ -213,8 +211,7 @@ local function OnEvent(event, ...)
 	end
 end
 
-local brokers = LibStub('Krowi_Brokers-1.0')
-brokers:InitBroker(
+addon.Broker:InitBroker(
 	addonName,
 	addon,
 	OnEnter,
@@ -222,7 +219,7 @@ brokers:InitBroker(
 	OnClick,
 	OnEvent
 )
-brokers:RegisterEvents(
+addon.Broker:RegisterEvents(
 	'PLAYER_ENTERING_WORLD',
 	'PLAYER_MONEY',
 	'SEND_MAIL_MONEY_CHANGED',

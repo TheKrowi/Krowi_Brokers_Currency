@@ -1,14 +1,11 @@
-local addonName, addon = ...; -- Global addon namespace
-addon.Libs = {}; -- Global library names table
-local libs = addon.Libs; -- Local library names table
+local addonName, addon = ...
 
-libs.AceLocale = "AceLocale-3.0";
-libs.AceEvent = "AceEvent-3.0";
-libs.Krowi_Util = "Krowi_Util-1.0";
-libs.Krowi_MenuUtil = "Krowi_MenuUtil-1.0";
-
--- [[ Personal libraries ]] --
-addon.Util = LibStub(addon.Libs.Krowi_Util);
-addon.MenuUtil = LibStub(addon.Libs.Krowi_MenuUtil);
-addon.Metadata = addon.Util.Metadata.GetAddOnMetadata(addonName);
-addon.Metadata.TitanPanelId = "Currency_Krowi";
+KROWI_LIBMAN:NewAddon(addonName, addon, {
+    SetCurrent = true,
+    SetUtil = true,
+    SetMenuBuilder = true,
+    SetBroker = true,
+    SetMetaData = true,
+    InitLocalization = true,
+})
+addon.CurrencyLib = KROWI_LIBMAN:GetLibrary('Krowi_Currency_2')

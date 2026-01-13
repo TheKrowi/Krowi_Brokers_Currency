@@ -47,7 +47,7 @@ local function DisplayHeaderRecursive(headerEntry, depth)
 		table.sort(currencies, function(a, b) return a.name < b.name end)
 
 		for _, currency in ipairs(currencies) do
-			GameTooltip:AddDoubleLine(indent .. '  ' .. currency.name, addon.FormatCurrency(currency.quantity) .. ' |T' .. currency.iconFileID .. ':16|t', 1, 1, 1, 1, 1, 1)
+			GameTooltip:AddDoubleLine(indent .. '  ' .. currency.name, addon:FormatCurrency(currency.quantity) .. ' |T' .. currency.iconFileID .. ':16|t', 1, 1, 1, 1, 1, 1)
 		end
 	end
 
@@ -82,7 +82,7 @@ local function GetAllCurrenciesSorted()
 	table.sort(currencies, function(a, b) return a.name < b.name end)
 
 	for _, currency in next, currencies do
-		GameTooltip:AddDoubleLine(currency.name, addon.FormatCurrency(currency.quantity) .. ' |T' .. currency.iconFileID .. ':16|t', 1, 1, 1, 1, 1, 1)
+		GameTooltip:AddDoubleLine(currency.name, addon:FormatCurrency(currency.quantity) .. ' |T' .. currency.iconFileID .. ':16|t', 1, 1, 1, 1, 1, 1)
 	end
 end
 
@@ -113,12 +113,12 @@ local function DisplayMoneyContent()
 		GameTooltip:AddLine(addon.L['Session:'])
 
 		if sessionProfit > 0 then
-			local profitFormatted = addon.FormatMoney(sessionProfit)
+			local profitFormatted = addon:FormatMoney(sessionProfit)
 			GameTooltip:AddDoubleLine(addon.L['Earned:'], profitFormatted, 0.5, 1, 0.5, 1, 1, 1)
 		end
 
 		if sessionSpent > 0 then
-			local spentFormatted = addon.FormatMoney(sessionSpent)
+			local spentFormatted = addon:FormatMoney(sessionSpent)
 			GameTooltip:AddDoubleLine(addon.L['Spent:'], spentFormatted, 1, 0.5, 0.5, 1, 1, 1)
 		end
 
@@ -152,7 +152,7 @@ local function DisplayMoneyContent()
 				hordeTotal = hordeTotal + money
 			end
 
-			local formattedMoney = addon.FormatMoney(money)
+			local formattedMoney = addon:FormatMoney(money)
 			local displayName = addon.CharacterData.GetCharacterDisplayName(char, true, currentRealmName)
 
 			if char.key == currentKey then
@@ -169,32 +169,32 @@ local function DisplayMoneyContent()
 		GameTooltip:AddLine(addon.L['Faction Totals:'])
 
 		if allianceTotal > 0 then
-			local allianceFormatted = addon.FormatMoney(allianceTotal)
+			local allianceFormatted = addon:FormatMoney(allianceTotal)
 			GameTooltip:AddDoubleLine(addon.L['Alliance:'], allianceFormatted, 0, 0.376, 1, 1, 1, 1)
 		end
 
 		if hordeTotal > 0 then
-			local hordeFormatted = addon.FormatMoney(hordeTotal)
+			local hordeFormatted = addon:FormatMoney(hordeTotal)
 			GameTooltip:AddDoubleLine(addon.L['Horde:'], hordeFormatted, 1, 0.2, 0.2, 1, 1, 1)
 		end
 	end
 
 	if addon.Util.IsMainline then
 		GameTooltip_AddBlankLineToTooltip(GameTooltip)
-		local warbandFormatted = addon.FormatMoney(warbandMoney)
+		local warbandFormatted = addon:FormatMoney(warbandMoney)
 		GameTooltip:AddDoubleLine(addon.L['Warband Bank:'], warbandFormatted, 0.8, 0.6, 1, 1, 1, 1)
 		totalMoney = totalMoney + warbandMoney
 	end
 
 	GameTooltip_AddBlankLineToTooltip(GameTooltip)
-	local totalFormatted = addon.FormatMoney(totalMoney)
+	local totalFormatted = addon:FormatMoney(totalMoney)
 	GameTooltip:AddDoubleLine(addon.L['Total:'], totalFormatted)
 
 	if KrowiBCU_Options.ShowWoWToken then
 		C_WowTokenPublic.UpdateMarketPrice()
 		local tokenPrice = C_WowTokenPublic.GetCurrentMarketPrice()
 		if tokenPrice and tokenPrice > 0 then
-			local tokenFormatted = addon.FormatMoney(tokenPrice)
+			local tokenFormatted = addon:FormatMoney(tokenPrice)
 			GameTooltip_AddBlankLineToTooltip(GameTooltip)
 			GameTooltip:AddDoubleLine(addon.L['WoW Token:'], tokenFormatted, 0, 0.8, 1, 1, 1, 1)
 		end

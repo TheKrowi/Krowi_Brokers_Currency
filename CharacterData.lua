@@ -55,7 +55,7 @@ end
 function characterData.GetCharacterDisplayTextWithColor(char, includeRealm, currentRealmName)
 	local displayName = characterData.GetCharacterDisplayName(char, includeRealm, currentRealmName)
 	local charMoney = char.money or 0
-	local formattedMoney = addon.FormatMoney(charMoney)
+	local formattedMoney = addon:FormatMoney(charMoney)
 	local classColor = characterData.GetCharacterClassColor(char)
 	
 	local coloredText = string.format('|cFF%02x%02x%02x%s|r: %s', 
