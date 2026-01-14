@@ -1,4 +1,4 @@
-## Interface: 120000, 110207, 50503, 20505, 20504, 20503, 20502, 20501, 11508
+## Interface: 120000, 110207, 50503, 20505, 11508
 ## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
 ## X-Prefix: KrowiBCU
 ## X-Acronym: KBCU

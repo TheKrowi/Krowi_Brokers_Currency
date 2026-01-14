@@ -1,7 +1,5 @@
 ﻿local addonName, addon = ...
 
-print('currency formatmoney addon', addon.Currency, addon.Currency.FormatMoney)
-
 local defaultOptions = {
 	HeaderSettings = {},
 	MoneyLabel = 'Icon',
