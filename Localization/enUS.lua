@@ -3,7 +3,7 @@ local L = addon.Localization.NewDefaultLocale()
 
 -- [[ Everything after this line is automatically generated from CurseForge and is not meant for manual edit - SOURCETOKEN - AUTOGENTOKEN ]] --
 
--- [[ Exported at 2026-01-07 23-10-16 ]] --
+-- [[ Exported at 2026-01-15 22-08-53 ]] --
 L["1 Hour"] = true
 L["12 Hours"] = true
 L["2 Hours"] = true
@@ -15,7 +15,7 @@ L["Account Total"] = true
 L["Alliance:"] = true
 L["Button Display"] = true
 L["Character Gold"] = true
-L["Characters:"] = true
+L["Characters"] = true
 L["Combined (Currency First)"] = true
 L["Combined (Money First)"] = true
 L["Copper Label"] = "c"
@@ -58,4 +58,3 @@ L["Track Session Gold"] = true
 L["Warband Bank"] = true
 L["Warband Bank:"] = true
 L["WoW Token:"] = true
-L['Characters'] = true

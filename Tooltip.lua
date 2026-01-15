@@ -125,7 +125,7 @@ local function DisplayMoneyContent()
 		GameTooltip_AddBlankLineToTooltip(GameTooltip)
 	end
 
-	GameTooltip:AddLine(addon.L['Characters:'])
+	GameTooltip:AddLine(addon.L['Characters'] .. ":")
 
 	local count = 0
 	for _, char in ipairs(sortedCharacters) do
