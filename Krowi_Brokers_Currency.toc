@@ -1,12 +1,13 @@
-## Interface: 110207, 50503, 11508
+## Interface: 120000, 110207, 50503, 20505, 11508
 ## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
 ## X-Prefix: KrowiBCU
 ## X-Acronym: KBCU
-## Version: 7.1
+## Version: 9.0
 ## Author: Krowi-Frostmane EU
 ## SavedVariables: KrowiBCU_Options, KrowiBCU_SavedData
+## LoadSavedVariablesFirst: 1
 ## Notes: Tracks and displays gold/currencies with session stats, tooltips, multi-character totals, and visibility options
-## IconTexture: interface/icons/inv_misc_curiouscoin
+## IconTexture: interface/icons/inv_misc_coin_01
 ## DefaultState: Enabled
 ## LoadOnDemand: 0
 ## Category: Data Broker
@@ -20,11 +21,8 @@
 ## Category-ruRU: Посредник данных
 ## Category-zhCN: 数据管理
 ## Category-zhTW: 資料管理
-## X-Discord-Invite-Link: https://discord.gg/mdBFQJYeQZ
-## X-Discord-Server-Name: Krowi's Addons
-## X-CurseForge: https://www.curseforge.com/wow/addons/krowi-brokers-currency
-## X-Curse-Project-ID: 1399736
-## X-Wago: https://addons.wago.io/addons/krowi-brokers-currency
+## X-Slug: krowi-brokers-currency
+## X-CurseForge-ID: 1399736
 ## X-Wago-ID: n6VPbOGd
 
 Libs\Files.xml
@@ -32,6 +30,7 @@ Libs\Files.xml
 Localization\Files.xml
 
 Currency.lua
+CharacterData.lua
 
 Tooltip.lua
 Menu.lua
