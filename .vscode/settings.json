@@ -1,19 +1,8 @@
 {
     "Lua.diagnostics.globals": [
-        "C_Bank",
-        "C_CurrencyInfo",
-        "C_Timer",
-        "C_WowTokenPublic",
-        "CreateFrame",
-        "Enum",
         "GameFontNormal",
         "GameTooltip",
         "GameTooltip_AddBlankLineToTooltip",
-        "GetMoney",
-        "GetRealmName",
-        "IsLeftControlKeyDown",
-        "IsRightControlKeyDown",
-        "IsShiftKeyDown",
         "LibStub",
         "MenuResponse",
         "MenuUtil",
@@ -22,20 +11,13 @@
         "TitanPanelGetVar",
         "ToggleAllBags",
         "UIParent",
-        "UnitClass",
-        "UnitFactionGroup",
-        "UnitName",
-        "time",
-        "tinsert",
-        "strmatch",
-        "geterrorhandler",
-        "GetLocale",
         "GAME_LOCALE",
         "GetCurrencyListSize",
         "GetCurrencyListInfo",
         "Krowi_Brokers_EventFrame",
         "KrowiBCU_Options",
-        "KROWI_LIBMAN"
+        "KROWI_LIBMAN",
+        "ToggleAllBags"
     ],
     "Lua.diagnostics.disable": [
         "deprecated",
@@ -154,4 +136,19 @@
         // _classic_era_
     ],
     "fsdeploy.deployWorkspaceOnSave": true,
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.runtime.builtin": {
+        "basic": "disable",
+        "debug": "disable",
+        "io": "disable",
+        "math": "disable",
+        "os": "disable",
+        "package": "disable",
+        "string": "disable",
+        "table": "disable",
+        "utf8": "disable"
+    },
+    "Lua.workspace.library": [
+        "~\\.vscode\\extensions\\ketho.wow-api-0.22.3\\Annotations\\Core"
+    ],
 }

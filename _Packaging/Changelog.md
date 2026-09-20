@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## 9.1 - 2026-09-20
+### Added
+- Currencies that are at their maximum quantity are now shown in red in the tooltip
+
+### Changed
+- Updated supported game versions: Retail 12.1.0, Mists of Pandaria Classic 5.5.4, Burning Crusade Anniversary 2.5.6 and Classic Era 1.15.9
+
+### Fixed
+- Fixed the addon tainting the C_CurrencyInfo namespace on clients without the modern currency list API, which could block protected actions (dev note: the legacy GetCurrencyListSize/GetCurrencyListInfo shims are now file-local instead of being assigned into C_CurrencyInfo)
+
 ## 9.0 - 2026-01-14
 ### Added
 - Support for WoW 12.0.0 (Midnight)
@@ -105,4 +115,4 @@ All notable changes to this project will be documented in this file.
 
 ## 1.0 - 2025-11-14
 ### Fixed
-- TitanPanelChildButtonTemplate errors
+- TitanPanelChildButtonTemplate errors

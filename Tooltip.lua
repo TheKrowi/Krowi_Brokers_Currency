@@ -7,6 +7,17 @@ function tooltip.Init()
 	-- Initialize tooltip if needed
 end
 
+local function FormatCurrencyWithIcon(currency)
+	local formatted = addon:FormatCurrency(currency.quantity)
+	if currency.currencyID and C_CurrencyInfo.PlayerHasMaxQuantity then
+		local hasMaxQuantity = C_CurrencyInfo.PlayerHasMaxQuantity(currency.currencyID)
+		if hasMaxQuantity then
+			formatted = '|cFFFF0000' .. formatted .. '|r'
+		end
+	end
+	return formatted .. ' |T' .. currency.iconFileID .. ':16|t'
+end
+
 local function HeaderHasCurrencies(headerEntry)
 	if #headerEntry.currencies > 0 then
 		return true
@@ -47,7 +58,37 @@ local function DisplayHeaderRecursive(headerEntry, depth)
 		table.sort(currencies, function(a, b) return a.name < b.name end)
 
 		for _, currency in ipairs(currencies) do
-			GameTooltip:AddDoubleLine(indent .. '  ' .. currency.name, addon:FormatCurrency(currency.quantity) .. ' |T' .. currency.iconFileID .. ':16|t', 1, 1, 1, 1, 1, 1)
+			GameTooltip:AddDoubleLine(
+				indent .. '  ' .. currency.name, FormatCurrencyWithIcon(currency)
+				-- .. "("
+				-- .. "name=" .. tostring(currency.name) .. ", "
+				-- .. "description=" .. tostring(currency.description) .. ", "
+				-- .. "currencyID=" .. tostring(currency.currencyID) .. ", "
+				-- .. "isHeader=" .. tostring(currency.isHeader) .. ", "
+				-- .. "isHeaderExpanded=" .. tostring(currency.isHeaderExpanded) .. ", "
+				-- .. "currencyListDepth=" .. tostring(currency.currencyListDepth) .. ", "
+				-- .. "isTypeUnused=" .. tostring(currency.isTypeUnused) .. ", "
+				-- .. "isShowInBackpack=" .. tostring(currency.isShowInBackpack) .. ", "
+				-- .. "quantity=" .. tostring(currency.quantity) .. ", "
+				-- .. "trackedQuantity=" .. tostring(currency.trackedQuantity) .. ", "
+				-- .. "iconFileID=" .. tostring(currency.iconFileID) .. ", "
+				-- .. "maxQuantity=" .. tostring(currency.maxQuantity) .. ", "
+				-- .. "canEarnPerWeek=" .. tostring(currency.canEarnPerWeek) .. ", "
+				-- .. "quantityEarnedThisWeek=" .. tostring(currency.quantityEarnedThisWeek) .. ", "
+				-- .. "isTradeable=" .. tostring(currency.isTradeable) .. ", "
+				-- .. "quality=" .. tostring(currency.quality) .. ", "
+				-- .. "maxWeeklyQuantity=" .. tostring(currency.maxWeeklyQuantity) .. ", "
+				-- .. "totalEarned=" .. tostring(currency.totalEarned) .. ", "
+				-- .. "discovered=" .. tostring(currency.discovered) .. ", "
+				-- .. "useTotalEarnedForMaxQty=" .. tostring(currency.useTotalEarnedForMaxQty) .. ", "
+				-- .. "isAccountWide=" .. tostring(currency.isAccountWide) .. ", "
+				-- .. "isAccountTransferable=" .. tostring(currency.isAccountTransferable) .. ", "
+				-- .. "transferPercentage=" .. tostring(currency.transferPercentage) .. ", "
+				-- .. "rechargingCycleDurationMS=" .. tostring(currency.rechargingCycleDurationMS) .. ", "
+				-- .. "rechargingAmountPerCycle=" .. tostring(currency.rechargingAmountPerCycle)
+				-- .. ")"
+				, 1, 1, 1, 1, 1, 1
+			)
 		end
 	end
 
@@ -82,7 +123,7 @@ local function GetAllCurrenciesSorted()
 	table.sort(currencies, function(a, b) return a.name < b.name end)
 
 	for _, currency in next, currencies do
-		GameTooltip:AddDoubleLine(currency.name, addon:FormatCurrency(currency.quantity) .. ' |T' .. currency.iconFileID .. ':16|t', 1, 1, 1, 1, 1, 1)
+		GameTooltip:AddDoubleLine(currency.name, FormatCurrencyWithIcon(currency), 1, 1, 1, 1, 1, 1)
 	end
 end
 
