@@ -12,8 +12,8 @@
     },
     "permissions": {
         "additionalDirectories": [
-            "../wow-ui-source/",
-            "../Krowi_ClaudeKit/"
+            "E:/World of Warcraft Addon Development/wow-ui-source/",
+            "E:/World of Warcraft Addon Development/Krowi_ClaudeKit/"
         ],
         "allow": [
             "PowerShell(& \"E:\\World of Warcraft Addon Development\\Krowi_ClaudeKit\\tools\\Deploy.ps1\" -WhatIf)",
