@@ -1,8 +1,8 @@
-## Interface: 120000, 110207, 50503, 20505, 11508
+## Interface: 120100, 50504, 20506, 11509
 ## Title: Krowi's Brokers |cFF1D92C2[Currency]|r
 ## X-Prefix: KrowiBCU
 ## X-Acronym: KBCU
-## Version: 9.0
+## Version: 9.1
 ## Author: Krowi-Frostmane EU
 ## SavedVariables: KrowiBCU_Options, KrowiBCU_SavedData
 ## LoadSavedVariablesFirst: 1

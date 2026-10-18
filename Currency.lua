@@ -4,9 +4,12 @@ local currency = {}
 addon.Currency = currency
 
 local C_CurrencyInfo = C_CurrencyInfo
-C_CurrencyInfo.GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize
-C_CurrencyInfo.GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or function(index)
-	local name, isHeader, isExpanded, isUnused, isWatched, count, icon, maximum, hasWeeklyLimit, currentWeeklyAmount, _, itemID = GetCurrencyListInfo(index)
+
+-- Assigning into a Blizzard C_ namespace taints it for the session and blocks protected calls, so shim locally.
+local legacyGetCurrencyListInfo = GetCurrencyListInfo
+local GetCurrencyListSize = C_CurrencyInfo.GetCurrencyListSize or GetCurrencyListSize
+local GetCurrencyListInfo = C_CurrencyInfo.GetCurrencyListInfo or function(index)
+	local name, isHeader, isExpanded, isUnused, isWatched, count, icon, maximum, hasWeeklyLimit, currentWeeklyAmount, _, itemID = legacyGetCurrencyListInfo(index)
 	return {
 		name = name,
 		isHeader = isHeader,
@@ -27,9 +30,9 @@ local headerStack = {}
 local headerOrder = {}
 
 local function GetNextCurrencyWithHeader(currencies, startIndex)
-	local size = C_CurrencyInfo.GetCurrencyListSize()
+	local size = GetCurrencyListSize()
 	for i = startIndex, size do
-		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
+		local info = GetCurrencyListInfo(i)
 		if info.isHeader then
 			local depth = info.currencyListDepth
 
@@ -113,9 +116,9 @@ function currency.UpdateChildHeaders(headerEntry, newValue)
 end
 
 local function GetNextCurrency(currencies, startIndex)
-	local size = C_CurrencyInfo.GetCurrencyListSize()
+	local size = GetCurrencyListSize()
 	for i = startIndex, size do
-		local info = C_CurrencyInfo.GetCurrencyListInfo(i)
+		local info = GetCurrencyListInfo(i)
 		if info.isHeader then
 			if not info.isHeaderExpanded then
 				C_CurrencyInfo.ExpandCurrencyList(i, true)
